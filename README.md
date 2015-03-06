@@ -4,6 +4,7 @@
 #configuration
 <p>1- Install maven build system for right project build http://maven.apache.org/download.cgi</p>
 <p>2- It is recommended to install maven plugin also in your editor</p>
+<p>3- open command line and execute (mvn install:install-file -Dfile=java-rrd-1.1.0.jar -DgroupId=com.fork -DartifactId=java-rrd -Dversion=1.1.0 -Dpackaging=jar) without parentheses</p>
 
 #How to run the project
 <p>1- Open your command line of your operating system</p>
