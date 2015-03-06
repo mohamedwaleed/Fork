@@ -2,21 +2,30 @@ package com.fork.ClientAdapter;
 
 public class Device {
 	private String IP;
+	private String ID;
 	private String hostName;
 
-	void setIP(String IP) {
+	public void setIP(String IP) {
 		this.IP = IP;
 	}
 
-	String getIP() {
+	public String getIP() {
 		return IP;
 	}
 
-	void setHostName(String hostName) {
+	public void setID(String ID) {
+		this.ID = ID;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setHostName(String hostName) {
 		this.hostName = hostName;
 	}
 
-	String getHostName() {
+	public String getHostName() {
 		return hostName;
 	}
 
