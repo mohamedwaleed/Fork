@@ -37,7 +37,7 @@ public class CactiDataPoller implements IDataPoller {
 				String data = commandResult.getOutput();
 				deviceData.add(data);
 			}
-		} else if (osName.charAt(0) == 'w') {
+		} else if (osName.charAt(0) == 'W') {
 		}
 		return deviceData;
 	}
@@ -47,7 +47,7 @@ public class CactiDataPoller implements IDataPoller {
 		String[] rrdFileNames = file.list();
 		List<String> deviceRRDS = new ArrayList<String>();
 		for (int i = 0; i < rrdFileNames.length; i++) {
-			if (rrdFileNames[i].startsWith(device.getHostName())) {
+			if (rrdFileNames[i].split("_")[0].equals(device.getHostName())) {
 				deviceRRDS.add(rrdFileNames[i]);
 			}
 		}
