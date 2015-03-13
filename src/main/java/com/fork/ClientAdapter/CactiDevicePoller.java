@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fork.domain.Device;
+
 public class CactiDevicePoller implements IDevicePoller {
 
 	/**

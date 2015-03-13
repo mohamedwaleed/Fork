@@ -8,6 +8,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.fork.domain.Device;
+
 
 public class CactiDataPollerTest {
 
@@ -22,8 +24,7 @@ public class CactiDataPollerTest {
 				System.out.println(l.get(i).split("\n")[0]);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue(false);
 		}
 	}
 	

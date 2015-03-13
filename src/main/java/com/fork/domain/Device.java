@@ -1,4 +1,4 @@
-package com.fork.ClientAdapter;
+package com.fork.domain;
 
 public class Device {
 	private String IP;
