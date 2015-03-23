@@ -1,14 +1,9 @@
 package com.fork.ClientAdapter;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fork.domain.Device;
 import com.fork.utills.Factory;
-
-import net.stamfest.rrd.CommandResult;
-import net.stamfest.rrd.RRDp;
 
 public class CactiDataPoller implements IDataPoller {
 	private String windowsBaseDir = "C:\\Cacti\\Apache2\\htdocs\\cacti\\rra\\";

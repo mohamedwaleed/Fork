@@ -1,14 +1,13 @@
 package com.fork.ClientAdapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fork.domain.Device;
-
 import net.stamfest.rrd.CommandResult;
 import net.stamfest.rrd.RRDp;
+
+import com.fork.domain.Device;
 
 public class CactiLinuxRrdInfo implements ICactiRrd {
 	private String linuxBaseDir = "/var/lib/cacti/rra/";
@@ -39,9 +38,15 @@ public class CactiLinuxRrdInfo implements ICactiRrd {
 		String[] rrdFileNames = file.list();
 		List<String> deviceRRDS = new ArrayList<String>();
 		for (int i = 0; i < rrdFileNames.length; i++) {
-			if (rrdFileNames[i].split("_")[0].equals(device.getHostName())) {
-				deviceRRDS.add(rrdFileNames[i]);
+			String[] words = device.getHostName().split(" ");
+			String[] filesWords = rrdFileNames[i].split("_");
+			int flag = 1;
+			for (int j = 0; j < words.length; j++) {
+				if (!words[j].equals(filesWords[j]))
+					flag = 0;
 			}
+			if (flag == 1)
+				deviceRRDS.add(rrdFileNames[i]);
 		}
 		return deviceRRDS;
 	}

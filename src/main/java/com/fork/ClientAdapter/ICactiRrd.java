@@ -1,6 +1,5 @@
 package com.fork.ClientAdapter;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.fork.domain.Device;
