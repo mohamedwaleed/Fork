@@ -1,4 +1,4 @@
-package com.fork.persistance;
+package com.fork.persistance.sqlite;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

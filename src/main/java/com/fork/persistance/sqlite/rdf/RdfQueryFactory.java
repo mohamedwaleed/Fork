@@ -1,4 +1,4 @@
-package com.fork.persistance.rdf;
+package com.fork.persistance.sqlite.rdf;
 
 public class RdfQueryFactory {
 

@@ -1,4 +1,4 @@
-package com.fork.persistance.rdf;
+package com.fork.persistance.sqlite.rdf;
 
 import com.hp.hpl.jena.query.DatasetAccessor;
 import com.hp.hpl.jena.query.DatasetAccessorFactory;

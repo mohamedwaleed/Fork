@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import com.fork.core.Core;
-import com.fork.persistance.DatabaseConnector;
+import com.fork.persistance.sqlite.DatabaseConnector;
 
 public class Main {
 

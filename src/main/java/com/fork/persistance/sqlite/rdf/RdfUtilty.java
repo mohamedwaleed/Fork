@@ -1,4 +1,4 @@
-package com.fork.persistance.rdf;
+package com.fork.persistance.sqlite.rdf;
 
 public class RdfUtilty {
 	static public String PREFIXES = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
