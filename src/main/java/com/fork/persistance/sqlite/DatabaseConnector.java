@@ -30,16 +30,16 @@ public class DatabaseConnector {
 				try {
 					stmt = con.createStatement();
 					String scriptTable = "CREATE TABLE Script "
-							+ "(ID INT PRIMARY KEY     AUTOINCREMENT,"
+							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
 							+ " NAME           TEXT    NOT NULL, "
-							+ " SCRIPT         TEXT     NOT NULL)";
+							+ " SCRIPT         TEXT    NOT NULL)";
 					stmt.executeUpdate(scriptTable);
 
 					String ruleTable = "CREATE TABLE Rule "
-							+ "(ID INT PRIMARY KEY     AUTOINCREMENT,"
+							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
 							+ " NAME           TEXT    NOT NULL, "
-							+ " RULE         TEXT     NOT NULL,"
-							+ " STATE         INT     NOT NULL)";
+							+ " RULE         TEXT      NOT NULL,"
+							+ " STATE         INT      NOT NULL)";
 					stmt.executeUpdate(ruleTable);
 
 					stmt.close();

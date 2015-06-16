@@ -1,4 +1,4 @@
-package com.fork.core;
+package com.fork.persistance.rdf;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import com.fork.domain.Interface;
 import com.fork.domain.Zone;
 
 public class JenaRetrieval {
+	private String prefix;
 
 	public static List<Device> getAvailableDevices() {
 		return null;
@@ -30,6 +31,14 @@ public class JenaRetrieval {
 	public static List<Interface> getDeviceInterfaces(String deviceName) {
 		return null;
 
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 }

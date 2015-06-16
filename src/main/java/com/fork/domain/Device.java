@@ -1,6 +1,6 @@
 package com.fork.domain;
 
-public class Device {
+public class Device extends Object{
 	private String IP;
 	private String ID;
 	private String hostName;
@@ -27,6 +27,19 @@ public class Device {
 
 	public String getHostName() {
 		return hostName;
+	}
+
+	@Override
+	public String toString() {
+		return hostName;
+	}
+
+	@Override
+	public boolean equals(Object s) {
+		if (ID.equals(((Device) s).getID()))
+			return true;
+		else
+			return false;
 	}
 
 }

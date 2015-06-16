@@ -52,13 +52,13 @@ public class DatabaseLogic {
 		return scripts;
 	}
 
-	public static void updateScripts(int id, String name, String script) {
+	public static void updateScript(int id, String name, String script) {
 		Connection con = DatabaseConnector.getDatabaseConnection();
 		Statement stmt = null;
 		try {
 			stmt = con.createStatement();
 			String sql = "UPDATE Script set NAME = '" + name
-					+ "' and script = '" + script + "' where id = '" + id
+					+ "', script = '" + script + "' where id = '" + id
 					+ "' ;";
 			stmt.executeUpdate(sql);
 			stmt.close();
