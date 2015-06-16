@@ -12,7 +12,6 @@ import com.fork.domain.Device;
 public class CactiLinuxRrdInfo implements ICactiRrd {
 	private String linuxBaseDir = "/var/lib/cacti/rra/";
 
-	@Override
 	public List<String> getRrdsInfo(Device device) throws Exception {
 		// TODO Auto-generated method stub
 		RRDp command = null;

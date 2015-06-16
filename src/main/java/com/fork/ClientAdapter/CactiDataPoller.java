@@ -16,7 +16,6 @@ public class CactiDataPoller implements IDataPoller {
 	 *            Device that you will poll data for it
 	 * @return List<String> output of each rrd file in device
 	 */
-	@Override
 	public List<String> pollData(Device device) throws Exception {
 		// TODO Auto-generated method stub
 		String osName = System.getProperty("os.name");

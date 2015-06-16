@@ -10,27 +10,26 @@ public class JenaRetrieval {
 	private String prefix;
 
 	public static List<Device> getAvailableDevices() {
+		
+	
+		
+		
 		return null;
-
 	}
 
 	public static void createZone(List<Device> devices, String name) {
-
 	}
 
 	public static List<Zone> getAllZones() {
 		return null;
-
 	}
 
-	public static List<Device> getZoneDevices(String zoneName) {
+	public static List<Device> getZoneDevices(Zone zone) {
 		return null;
-
 	}
 
 	public static List<Interface> getDeviceInterfaces(String deviceName) {
 		return null;
-
 	}
 
 	public String getPrefix() {

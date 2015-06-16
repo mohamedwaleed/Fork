@@ -119,7 +119,7 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 				int rows[] = list.getSelectedIndices();
 				Arrays.sort(rows);
 				List<Integer> ids = new ArrayList<Integer>();
-				for (int i = rows.length; i >= 0; i--) {
+				for (int i = rows.length - 1; i >= 0; i--) {
 					Script script = (Script) model.getElementAt(rows[i]);
 					model.removeElement(script);
 					ids.add(script.getId());
@@ -171,16 +171,19 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		}
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		if (list.getSelectedIndex() != -1) {
-			textField_1.setText(((Script) model.getElementAt(list
-					.getSelectedIndex())).getName());
-			scriptTextArea.setText(((Script) model.getElementAt(list
-					.getSelectedIndex())).getScript());
-		} else {
-			textField_1.setText("");
-			scriptTextArea.setText("");
+	public void valueChanged(ListSelectionEvent evt) {
+		if (!evt.getValueIsAdjusting()) {
+			if (list.getSelectedIndex() != -1) {
+				System.out.println("here");
+				textField_1.setText(((Script) model.getElementAt(list
+						.getSelectedIndex())).getName());
+				scriptTextArea.setText(((Script) model.getElementAt(list
+						.getSelectedIndex())).getScript());
+			} else {
+				textField_1.setText("");
+				scriptTextArea.setText("");
+			}
 		}
 	}
+
 }

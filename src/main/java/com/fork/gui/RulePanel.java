@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,8 +34,9 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 	private List<Rule> RulesNames;
 	@SuppressWarnings("rawtypes")
 	private DefaultListModel model;
+	private JCheckBox chckbxActivated;
 	private JTextArea RuleTextArea;
-
+	private RuleAddition ruleAddition;
 	/**
 	 * Create the panel.
 	 */
@@ -52,27 +52,49 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		RuleArea.setLayout(null);
 
 		JLabel lblNewLabel_2 = new JLabel("Name");
-		lblNewLabel_2.setBounds(10, 11, 68, 14);
+		lblNewLabel_2.setBounds(10, 60, 68, 14);
 		RuleArea.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("Rule");
-		lblNewLabel_3.setBounds(10, 40, 68, 14);
+		lblNewLabel_3.setBounds(10, 99, 68, 14);
 		RuleArea.add(lblNewLabel_3);
 
 		textField_1 = new JTextField();
+		textField_1.setEditable(false);
 		textField_1.setBackground(SystemColor.window);
-		textField_1.setBounds(88, 8, 355, 20);
+		textField_1.setBounds(88, 57, 355, 20);
 		RuleArea.add(textField_1);
 		textField_1.setColumns(10);
 		JScrollPane scS = new JScrollPane();
-		scS.setSize(365, 189);
-		scS.setLocation(88, 40);
+		scS.setSize(365, 130);
+		scS.setLocation(88, 99);
 		scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		RuleArea.add(scS);
 
 		RuleTextArea = new JTextArea(20, 20);
+		RuleTextArea.setEditable(false);
 		scS.setViewportView(RuleTextArea);
+
+		chckbxActivated = new JCheckBox("Activated");
+		chckbxActivated.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(chckbxActivated.isSelected());
+				if (list.getSelectedIndex() != -1) {
+					int ret;
+					if (chckbxActivated.isSelected())
+						ret = 1;
+					else
+						ret = 0;
+					DatabaseLogic.changeRuleState(((Rule) model
+							.getElementAt(list.getSelectedIndex())).getId(),
+							ret);
+					((Rule)model.elementAt(list.getSelectedIndex())).setState(ret);
+				}
+			}
+		});
+		chckbxActivated.setBounds(10, 18, 97, 23);
+		RuleArea.add(chckbxActivated);
 
 		JPanel liftList1 = new JPanel();
 		liftList1.setBounds(10, 45, 145, 240);
@@ -81,6 +103,20 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		add(liftList1);
 
 		RulesNames = DatabaseLogic.getRules();
+
+		Rule s = new Rule();
+		s.setId(1);
+		s.setName("islam");
+		s.setRule("rule1");
+		s.setState(1);
+		RulesNames.add(s);
+		s = new Rule();
+		s.setId(2);
+		s.setName("ahm");
+		s.setRule("rule2");
+		s.setState(0);
+		RulesNames.add(s);
+
 		model = new DefaultListModel();
 		for (int i = 0; i < RulesNames.size(); i++)
 			model.addElement(((Rule) RulesNames.get(i)));
@@ -97,15 +133,17 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		JButton remove = new JButton("Remove");
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int rows[] = list.getSelectedIndices();
-				Arrays.sort(rows);
-				List<Integer> ids = new ArrayList<Integer>();
-				for (int i = rows.length; i >= 0; i--) {
-					Rule Rule = (Rule) model.getElementAt(rows[i]);
-					model.removeElement(Rule);
-					ids.add(Rule.getId());
+				if (list.getSelectedIndex() != -1) {
+					int rows[] = list.getSelectedIndices();
+					Arrays.sort(rows);
+					List<Integer> ids = new ArrayList<Integer>();
+					for (int i = rows.length-1; i >= 0; i--) {
+						Rule Rule = (Rule) model.getElementAt(rows[i]);
+						model.removeElement(Rule);
+						ids.add(Rule.getId());
+					}
+					DatabaseLogic.deleteRules(ids);
 				}
-				DatabaseLogic.deleteRules(ids);
 			}
 		});
 		panel_s.add(remove);
@@ -114,55 +152,34 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		btnNewButton_2.setBounds(0, 0, 627, 33);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				RuleAddition.start();
-				RulesNames = DatabaseLogic.getRules();
+				ruleAddition = new RuleAddition();
+				ruleAddition.initialize();
+				
+			/*	RulesNames = DatabaseLogic.getRules();
 				model = new DefaultListModel();
 				for (int i = 0; i < RulesNames.size(); i++)
 					model.addElement(((Rule) RulesNames.get(i)));
-				list.setModel(model);
+				list.setModel(model);*/
 			}
 		});
 		add(btnNewButton_2);
 	}
 
-	static class RuleAddition extends JPanel {
-		public static void start() {
-			JPanel myPanel = new JPanel();
-			myPanel.setBounds(100, 100, 100, 100);
-			myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-			JTextField RuleName = new JTextField();
-			myPanel.add(new JLabel("Rule Name"));
-			myPanel.add(RuleName);
-			myPanel.add(new JLabel("Rule"));
-
-			JScrollPane scS = new JScrollPane();
-			scS.setSize(365, 144);
-			scS.setLocation(151, 40);
-			scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-			scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			JTextArea Rule = new JTextArea(20, 20);
-			scS.setViewportView(Rule);
-			myPanel.add(scS);
-			int result = JOptionPane.showConfirmDialog(null, myPanel,
-					"Add Rule", JOptionPane.OK_CANCEL_OPTION);
-			if (result == JOptionPane.OK_OPTION) {
-				DatabaseLogic.addRule(RuleName.getText().toString(), Rule
-						.getText().toString());
-			}
-		}
-	}
-
-	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		if (list.getSelectedIndex() != -1) {
 			textField_1.setText(((Rule) model.getElementAt(list
 					.getSelectedIndex())).getName());
 			RuleTextArea.setText(((Rule) model.getElementAt(list
 					.getSelectedIndex())).getRule());
+			int ret = ((Rule) model.getElementAt(list.getSelectedIndex()))
+					.getState();
+			boolean ac = false;
+			if (ret == 1)
+				ac = true;
+			chckbxActivated.setSelected(ac);
 		} else {
 			textField_1.setText("");
 			RuleTextArea.setText("");
 		}
 	}
-
 }

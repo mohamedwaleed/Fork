@@ -27,14 +27,21 @@ public class ZoneArea extends JPanel {
 		setForeground(Color.BLACK);
 	}
 
-	public void addImage(String name, String ip) {
+	public JLabel addImage(String name, String ip) {
 		JLabel label = new JLabel(name + "-" + ip, image, SwingConstants.CENTER);
 		label.setVerticalTextPosition(JLabel.BOTTOM);
 		label.setHorizontalTextPosition(JLabel.CENTER);
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
 		add(label);
+		revalidate();
+		repaint();
+		return label;
+	}
 
+	public void removeAllComponents() {
+		removeAll();
 		revalidate();
 		repaint();
 	}
+
 }

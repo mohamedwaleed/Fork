@@ -25,12 +25,14 @@ import com.fork.persistance.rdf.JenaRetrieval;
 @SuppressWarnings("serial")
 public class ZonePanel extends JPanel {
 	private JTextField textField;
-	private JList list;
+	
 	private List<Device> devices;
 	private List<Device> choosenDevices;
 	@SuppressWarnings("rawtypes")
 	private DefaultListModel model;
+	private JList list;
 	private ZoneArea zoneArea;
+	
 
 	/**
 	 * Create the panel.
@@ -90,7 +92,7 @@ public class ZonePanel extends JPanel {
 				if (list.getSelectedIndex() != -1) {
 					int rows[] = list.getSelectedIndices();
 					Arrays.sort(rows);
-					for (int i = rows.length; i >= 0; i--) {
+					for (int i = rows.length-1; i >= 0; i--) {
 						Device newD = (Device) model.getElementAt(rows[i]);
 						choosenDevices.add(newD);
 						model.removeElementAt(rows[i]);
