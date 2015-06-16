@@ -7,6 +7,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Script;
 import com.fork.persistance.sqlite.DatabaseLogic;
-import com.google.common.primitives.Ints;
 
 @SuppressWarnings("serial")
 public class ScriptPanel extends JPanel implements ListSelectionListener {
@@ -117,12 +117,10 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int rows[] = list.getSelectedIndices();
-				List<Integer> integersList = Ints.asList(rows);
-				Collections.sort(integersList, Collections.reverseOrder());
-				
+				Arrays.sort(rows);
 				List<Integer> ids = new ArrayList<Integer>();
-				for (int i : integersList) {
-					Script script = (Script) model.getElementAt(i);
+				for (int i = rows.length; i >= 0; i--) {
+					Script script = (Script) model.getElementAt(rows[i]);
 					model.removeElement(script);
 					ids.add(script.getId());
 				}

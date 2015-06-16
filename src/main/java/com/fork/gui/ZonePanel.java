@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -21,7 +21,6 @@ import javax.swing.border.LineBorder;
 
 import com.fork.domain.Device;
 import com.fork.persistance.rdf.JenaRetrieval;
-import com.google.common.primitives.Ints;
 
 @SuppressWarnings("serial")
 public class ZonePanel extends JPanel {
@@ -90,12 +89,11 @@ public class ZonePanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if (list.getSelectedIndex() != -1) {
 					int rows[] = list.getSelectedIndices();
-					List<Integer> integersList = Ints.asList(rows);
-					Collections.sort(integersList, Collections.reverseOrder());
-					for (int i : integersList) {
-						Device newD = (Device) model.getElementAt(i);
+					Arrays.sort(rows);
+					for (int i = rows.length; i >= 0; i--) {
+						Device newD = (Device) model.getElementAt(rows[i]);
 						choosenDevices.add(newD);
-						model.removeElementAt(i);
+						model.removeElementAt(rows[i]);
 						zoneArea.addImage(newD.getHostName(), newD.getIP());
 					}
 				}
