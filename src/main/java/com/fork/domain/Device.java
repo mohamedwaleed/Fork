@@ -36,7 +36,7 @@ public class Device extends Object{
 
 	@Override
 	public boolean equals(Object s) {
-		if (ID.equals(((Device) s).getID()))
+		if (hostName.equals(((Device) s).getHostName()))
 			return true;
 		else
 			return false;

@@ -42,6 +42,12 @@ public class DatabaseConnector {
 							+ " STATE         INT      NOT NULL)";
 					stmt.executeUpdate(ruleTable);
 
+					String ruleScript = "CREATE TABLE Rule_Script "
+							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
+							+ " SCRIPT_ID           INT    NOT NULL, "
+							+ " RULE_ID         INT      NOT NULL)";
+					stmt.executeUpdate(ruleScript);
+
 					stmt.close();
 					con.close();
 				} catch (SQLException e) {

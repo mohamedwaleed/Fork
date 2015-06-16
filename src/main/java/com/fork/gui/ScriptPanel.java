@@ -27,16 +27,18 @@ import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Script;
 import com.fork.persistance.sqlite.DatabaseLogic;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class ScriptPanel extends JPanel implements ListSelectionListener {
 	private JTextField textField_1;
 	@SuppressWarnings("rawtypes")
 	private JList list;
-	private JScrollPane jScrollPane1;
 	private List<Script> scriptsNames;
 	@SuppressWarnings("rawtypes")
 	private DefaultListModel model;
+	private JScrollPane jScrollPane1;
+	
 	private JTextArea scriptTextArea;
 
 	/**
@@ -79,7 +81,7 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		scS.setViewportView(scriptTextArea);
 
 		JPanel liftList1 = new JPanel();
-		liftList1.setBounds(10, 45, 145, 240);
+		liftList1.setBounds(10, 69, 145, 216);
 		liftList1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList1.setLayout(new BorderLayout(0, 0));
 		add(liftList1);
@@ -142,6 +144,11 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 			}
 		});
 		add(btnNewButton_2);
+		
+		JLabel lblListOfScripts = new JLabel("List of scripts");
+		lblListOfScripts.setHorizontalAlignment(SwingConstants.CENTER);
+		lblListOfScripts.setBounds(10, 45, 145, 14);
+		add(lblListOfScripts);
 	}
 
 	static class ScriptAddition extends JPanel {

@@ -57,9 +57,8 @@ public class DatabaseLogic {
 		Statement stmt = null;
 		try {
 			stmt = con.createStatement();
-			String sql = "UPDATE Script set NAME = '" + name
-					+ "', script = '" + script + "' where id = '" + id
-					+ "' ;";
+			String sql = "UPDATE Script set NAME = '" + name + "', script = '"
+					+ script + "' where id = '" + id + "' ;";
 			stmt.executeUpdate(sql);
 			stmt.close();
 			con.close();
@@ -85,19 +84,27 @@ public class DatabaseLogic {
 		}
 	}
 
-	public static void addRule(String name, String rule) {
+	public static int addRule(String name, String rule) {
 		Connection con = DatabaseConnector.getDatabaseConnection();
 		Statement stmt = null;
+		int id = 0;
 		try {
 			stmt = con.createStatement();
 			String sql = "INSERT INTO Rule (NAME,RULE,STATE) " + "VALUES ('"
 					+ name + "', '" + rule + "' , '" + 1 + "');";
 			stmt.executeUpdate(sql);
+
+			String getId = "SELECT last_insert_rowid() AS id";
+			ResultSet se = stmt.executeQuery(getId);
+			if (se.next())
+				id = se.getInt("id");
+			se.close();
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return id;
 	}
 
 	public static List<Rule> getRules() {
@@ -148,8 +155,8 @@ public class DatabaseLogic {
 		Statement stmt = null;
 		try {
 			stmt = con.createStatement();
-			String sql = "UPDATE Rule set state = '" + state
-					+ "' where id = '" + id + "' ;";
+			String sql = "UPDATE Rule set state = '" + state + "' where id = '"
+					+ id + "' ;";
 			stmt.executeUpdate(sql);
 			stmt.close();
 			con.close();
@@ -157,8 +164,50 @@ public class DatabaseLogic {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+	public static void addRuleScripts(List<Script> pickedScripts, int newId) {
+		Connection con = DatabaseConnector.getDatabaseConnection();
+		Statement stmt = null;
+		try {
+			stmt = con.createStatement();
+			for (Script script : pickedScripts) {
+				stmt.addBatch("INSERT INTO Rule_Script (SCRIPT_ID,RULE_ID) "
+						+ "VALUES ('" + script.getId() + "', '" + newId + "');");
+			}
+			stmt.executeBatch();
+			stmt.close();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<Script> getRuleScripts(int ruleId) {
+		List<Script> scripts = new ArrayList<Script>();
+		Connection con = DatabaseConnector.getDatabaseConnection();
+		Statement stmt = null;
+		try {
+			con.setAutoCommit(false);
+			stmt = con.createStatement();
+			ResultSet rs = stmt
+					.executeQuery("select script.id,script.name,script from  script,rule, rule_script where rule.id= '"
+							+ ruleId
+							+ "' and rule.id = rule_script.rule_id and script.id = rule_script.script_id ;");
+			while (rs.next()) {
+				Script sc = new Script();
+				sc.setId(rs.getInt("id"));
+				sc.setName(rs.getString("name"));
+				sc.setScript(rs.getString("script"));
+				scripts.add(sc);
+			}
+			rs.close();
+			stmt.close();
+			con.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		return scripts;
+	}
 
 }

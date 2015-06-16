@@ -19,11 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Rule;
+import com.fork.domain.Script;
 import com.fork.persistance.sqlite.DatabaseLogic;
 
 public class RulePanel extends JPanel implements ListSelectionListener {
@@ -97,7 +99,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		RuleArea.add(chckbxActivated);
 
 		JPanel liftList1 = new JPanel();
-		liftList1.setBounds(10, 45, 145, 240);
+		liftList1.setBounds(10, 70, 145, 215);
 		liftList1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList1.setLayout(new BorderLayout(0, 0));
 		add(liftList1);
@@ -163,6 +165,11 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 			}
 		});
 		add(btnNewButton_2);
+		
+		JLabel lblListOfRules = new JLabel("List of rules");
+		lblListOfRules.setHorizontalAlignment(SwingConstants.CENTER);
+		lblListOfRules.setBounds(10, 45, 145, 14);
+		add(lblListOfRules);
 	}
 
 	public void valueChanged(ListSelectionEvent arg0) {

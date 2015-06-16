@@ -3,26 +3,36 @@ package com.fork.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
+import com.fork.domain.Script;
 import com.fork.domain.Zone;
 import com.fork.persistance.rdf.JenaRetrieval;
+import com.fork.persistance.sqlite.DatabaseLogic;
 
 @SuppressWarnings("serial")
 public class RuleAddition extends JFrame implements ListSelectionListener,
@@ -35,7 +45,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	private JList list;
 	private List<Zone> zones;
 	private List<JLabel> labels;
-	private JPanel panel_1;
+	private JTextArea ruleName;
 
 	/**
 	 * Create the panel.
@@ -54,17 +64,17 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panel.setBounds(10, 11, 763, 285);
+		panel.setBounds(10, 39, 763, 257);
 		getContentPane().add(panel);
 
 		zoneArea = new ZoneArea();
 		zoneArea.initialize();
-		zoneArea.setBounds(186, 0, 576, 284);
+		zoneArea.setBounds(186, 0, 576, 257);
 		panel.setLayout(null);
 		panel.add(zoneArea);
 
 		JPanel liftList = new JPanel();
-		liftList.setBounds(0, 0, 177, 284);
+		liftList.setBounds(10, 26, 167, 231);
 		panel.add(liftList);
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList.setLayout(new BorderLayout(0, 0));
@@ -89,9 +99,67 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		jScrollPane.setMaximumSize(new Dimension(200, 100));
 		liftList.add(jScrollPane, BorderLayout.CENTER);
 
-		interfacePanel = new InterfacePanel();
-		add(interfacePanel);
+		JLabel lblListOfZones = new JLabel("List of zones");
+		lblListOfZones.setHorizontalAlignment(SwingConstants.CENTER);
+		lblListOfZones.setBounds(10, 1, 166, 14);
+		panel.add(lblListOfZones);
 
+		interfacePanel = new InterfacePanel();
+		getContentPane().add(interfacePanel);
+
+		JButton btnNewButton = new JButton("Add Rule");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = ruleName.getText().toString();
+				List<String> conditions = interfacePanel.getConditions();
+				if (!name.isEmpty() && !conditions.isEmpty()) {
+					String query = "islam";
+
+					// /////////////////////////////////////////////////////////////////////////////
+
+					showChooseScriptDialog(name, query);
+				}
+			}
+		});
+		btnNewButton.setBounds(522, 11, 251, 23);
+		getContentPane().add(btnNewButton);
+
+		JLabel lblRuleName = new JLabel("Rule Name");
+		lblRuleName.setBounds(112, 14, 76, 14);
+		getContentPane().add(lblRuleName);
+
+		ruleName = new JTextArea();
+		ruleName.setBounds(198, 13, 190, 15);
+		getContentPane().add(ruleName);
+
+	}
+
+	protected void showChooseScriptDialog(String name, String query) {
+
+		DialogJPanel djp = new DialogJPanel(name, query);
+		UIManager.put("OptionPane.minimumSize",new Dimension(500,350)); 
+		int result = JOptionPane.showConfirmDialog(RuleAddition.this, djp,
+				"Choose scripts", JOptionPane.OK_CANCEL_OPTION);
+
+		if (result == JOptionPane.OK_OPTION) {
+			JList choosenScripts = djp.getChoosenScripts();
+			String nameEdited = djp.getNameEdited();
+			DefaultListModel scriptsModel = djp.getModel();;
+			if (!nameEdited.isEmpty()) {
+				
+				int newId = DatabaseLogic.addRule(nameEdited, query);
+
+				int picked[] = choosenScripts.getSelectedIndices();
+				List<Script> pickedScripts = new ArrayList<Script>(); 
+				for (int i : picked)
+					pickedScripts.add((Script)(scriptsModel.getElementAt(i)));
+				
+				DatabaseLogic.addRuleScripts(pickedScripts, newId);
+				
+				dispatchEvent(new WindowEvent(RuleAddition.this,
+						WindowEvent.WINDOW_CLOSING));
+			}
+		}
 	}
 
 	public void initialize() {
@@ -117,7 +185,6 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 				d.setHostName("Ahmed");
 				d.setIP("168");
 				zoneDevices.add(d);
-				System.out.println(zoneDevices.size());
 
 				for (int i = 0; i < zoneDevices.size(); i++) {
 					JLabel tmp = zoneArea.addImage(zoneDevices.get(i)
@@ -134,10 +201,12 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		for (int i = 0; i < labels.size(); i++) {
 			if (label == labels.get(i)) {
 				System.out.println(label.getText().toString());
-
+				Device device = new Device();
+				device.setIP(label.getText().toString().split("-")[1]);
+				device.setHostName(label.getText().toString().split("-")[0]);
 				List<Interface> interfaces = new ArrayList<Interface>();
-				interfaces = JenaRetrieval.getDeviceInterfaces(label.getText()
-						.toString().split("-")[0]);
+				interfaces = JenaRetrieval.getDeviceInterfaces(device
+						.getHostName());
 
 				if (label.getText().toString().equals("islam-192")) {
 					interfaces = new ArrayList<Interface>();
@@ -157,7 +226,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 					interfaces.add(in);
 				}
 
-				interfacePanel.addInteefaces(interfaces);
+				interfacePanel.addInteefaces(interfaces, device);
 				break;
 
 			}
