@@ -73,10 +73,12 @@ public class DatabaseLogic {
 		try {
 			stmt = con.createStatement();
 			for (int i = 0; i < ids.size(); i++) {
-				String sql = "delete from Script where id = '" + ids.get(i)
-						+ "';";
-				stmt.executeUpdate(sql);
+				stmt.addBatch("delete from Rule_Script where script_id = '"
+						+ ids.get(i) + "';");
+				stmt.addBatch("delete from Script where id = '" + ids.get(i)
+						+ "';");
 			}
+			stmt.executeBatch();
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
@@ -139,10 +141,12 @@ public class DatabaseLogic {
 		try {
 			stmt = con.createStatement();
 			for (int i = 0; i < ids.size(); i++) {
-				String sql = "delete from Rule where id = '" + ids.get(i)
-						+ "';";
-				stmt.executeUpdate(sql);
+				stmt.addBatch("delete from Rule_Script where rule_id = '"
+						+ ids.get(i) + "';");
+				stmt.addBatch("delete from Rule where id = '" + ids.get(i)
+						+ "';");
 			}
+			stmt.executeBatch();
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
@@ -190,7 +194,7 @@ public class DatabaseLogic {
 			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			ResultSet rs = stmt
-					.executeQuery("select script.id,script.name,script from  script,rule, rule_script where rule.id= '"
+					.executeQuery("select script.id,script.name,script.script from  script,rule, rule_script where rule_script.rule_id= '"
 							+ ruleId
 							+ "' and rule.id = rule_script.rule_id and script.id = rule_script.script_id ;");
 			while (rs.next()) {
@@ -208,6 +212,21 @@ public class DatabaseLogic {
 			System.exit(0);
 		}
 		return scripts;
+	}
+
+	public static void deleteRuleScripts(int id) {
+		Connection con = DatabaseConnector.getDatabaseConnection();
+		Statement stmt = null;
+		try {
+			stmt = con.createStatement();
+			String sql = "delete from Rule_Script where rule_id = '" + id
+					+ "' ;";
+			stmt.executeUpdate(sql);
+			stmt.close();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

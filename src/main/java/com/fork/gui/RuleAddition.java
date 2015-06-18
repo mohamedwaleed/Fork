@@ -2,6 +2,7 @@ package com.fork.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,12 +47,14 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	private List<Zone> zones;
 	private List<JLabel> labels;
 	private JTextArea ruleName;
+	private RulePanel par;
 
 	/**
 	 * Create the panel.
 	 */
 	@SuppressWarnings("unchecked")
-	public RuleAddition() {
+	public RuleAddition(RulePanel d) {
+		this.par = d;
 		labels = new ArrayList<JLabel>();
 		setResizable(false);
 		setBounds(100, 100, 789, 588);
@@ -137,25 +140,26 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	protected void showChooseScriptDialog(String name, String query) {
 
 		DialogJPanel djp = new DialogJPanel(name, query);
-		UIManager.put("OptionPane.minimumSize",new Dimension(500,350)); 
+		UIManager.put("OptionPane.minimumSize", new Dimension(500, 350));
 		int result = JOptionPane.showConfirmDialog(RuleAddition.this, djp,
 				"Choose scripts", JOptionPane.OK_CANCEL_OPTION);
 
 		if (result == JOptionPane.OK_OPTION) {
 			JList choosenScripts = djp.getChoosenScripts();
+			DefaultListModel scriptsModel = djp.getModel();
+			;
 			String nameEdited = djp.getNameEdited();
-			DefaultListModel scriptsModel = djp.getModel();;
 			if (!nameEdited.isEmpty()) {
-				
+
 				int newId = DatabaseLogic.addRule(nameEdited, query);
 
 				int picked[] = choosenScripts.getSelectedIndices();
-				List<Script> pickedScripts = new ArrayList<Script>(); 
+				List<Script> pickedScripts = new ArrayList<Script>();
 				for (int i : picked)
-					pickedScripts.add((Script)(scriptsModel.getElementAt(i)));
-				
+					pickedScripts.add((Script) (scriptsModel.getElementAt(i)));
+
 				DatabaseLogic.addRuleScripts(pickedScripts, newId);
-				
+				par.updateList();
 				dispatchEvent(new WindowEvent(RuleAddition.this,
 						WindowEvent.WINDOW_CLOSING));
 			}

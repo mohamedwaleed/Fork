@@ -12,14 +12,15 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
-import javax.swing.SwingConstants;
 
 public class InterfacePanel extends JPanel {
 	private JPanel panel = new JPanel();
@@ -110,6 +111,9 @@ public class InterfacePanel extends JPanel {
 	protected void convertInputToCondition() {
 		System.out.println("  " + device.getHostName() + "  " + device.getIP());
 		conditions.add("new String");
+		
+		JOptionPane.showMessageDialog (InterfacePanel.this, "Condition has been added", "Success", JOptionPane.INFORMATION_MESSAGE);
+		
 	}
 
 	public void addInteefaces(List<Interface> interfaces, Device device) {

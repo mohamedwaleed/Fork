@@ -15,11 +15,13 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -39,6 +41,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 	private JCheckBox chckbxActivated;
 	private JTextArea RuleTextArea;
 	private RuleAddition ruleAddition;
+
 	/**
 	 * Create the panel.
 	 */
@@ -91,7 +94,8 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					DatabaseLogic.changeRuleState(((Rule) model
 							.getElementAt(list.getSelectedIndex())).getId(),
 							ret);
-					((Rule)model.elementAt(list.getSelectedIndex())).setState(ret);
+					((Rule) model.elementAt(list.getSelectedIndex()))
+							.setState(ret);
 				}
 			}
 		});
@@ -139,7 +143,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					int rows[] = list.getSelectedIndices();
 					Arrays.sort(rows);
 					List<Integer> ids = new ArrayList<Integer>();
-					for (int i = rows.length-1; i >= 0; i--) {
+					for (int i = rows.length - 1; i >= 0; i--) {
 						Rule Rule = (Rule) model.getElementAt(rows[i]);
 						model.removeElement(Rule);
 						ids.add(Rule.getId());
@@ -150,26 +154,62 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		});
 		panel_s.add(remove);
 
+		JButton btnNewButton = new JButton("Edit Scripts");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (list.getSelectedIndex() != -1) {
+					Rule ruleToUpdate = (Rule) model.getElementAt(list
+							.getSelectedIndex());
+					EditRuleJPanel djp = new EditRuleJPanel(ruleToUpdate);
+					UIManager.put("OptionPane.minimumSize", new Dimension(500,
+							350));
+					int result = JOptionPane.showConfirmDialog(RulePanel.this,
+							djp, "Edit existed scripts",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+
+						DatabaseLogic.deleteRuleScripts(ruleToUpdate.getId());
+						DefaultListModel scriptsModel = djp.getNewModel();
+
+						List<Script> pickedScripts = new ArrayList<Script>();
+						for (int i = 0; i < scriptsModel.size(); i++)
+							pickedScripts.add((Script) (scriptsModel
+									.getElementAt(i)));
+
+						DatabaseLogic.addRuleScripts(pickedScripts,
+								ruleToUpdate.getId());
+					}
+				}
+
+			}
+		});
+		panel_s.add(btnNewButton);
+
 		JButton btnNewButton_2 = new JButton("Add Rule");
 		btnNewButton_2.setBounds(0, 0, 627, 33);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ruleAddition = new RuleAddition();
+				ruleAddition = new RuleAddition(RulePanel.this);
 				ruleAddition.initialize();
-				
-			/*	RulesNames = DatabaseLogic.getRules();
-				model = new DefaultListModel();
-				for (int i = 0; i < RulesNames.size(); i++)
-					model.addElement(((Rule) RulesNames.get(i)));
-				list.setModel(model);*/
+
 			}
 		});
 		add(btnNewButton_2);
-		
+
 		JLabel lblListOfRules = new JLabel("List of rules");
 		lblListOfRules.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListOfRules.setBounds(10, 45, 145, 14);
 		add(lblListOfRules);
+	}
+
+	public void updateList() {
+		System.out.println("Here update List");
+		RulesNames = DatabaseLogic.getRules();
+		model = new DefaultListModel();
+		for (int i = 0; i < RulesNames.size(); i++)
+			model.addElement(((Rule) RulesNames.get(i)));
+		list.setModel(model);
 	}
 
 	public void valueChanged(ListSelectionEvent arg0) {
