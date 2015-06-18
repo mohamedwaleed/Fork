@@ -58,7 +58,7 @@ public class ZonePanel extends JPanel {
 		textField.setColumns(20);
 
 		JPanel liftList = new JPanel();
-		liftList.setBounds(10, 30, 157, 240);
+		liftList.setBounds(10, 56, 157, 214);
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		add(liftList);
 		liftList.setLayout(new BorderLayout(0, 0));
@@ -117,7 +117,11 @@ public class ZonePanel extends JPanel {
 			}
 		});
 		panel_2.add(btnNewButton_1);
+		
+		JLabel lblListOfNonzoned = new JLabel("List of non-zoned devices");
+		lblListOfNonzoned.setHorizontalAlignment(SwingConstants.CENTER);
+		lblListOfNonzoned.setBounds(10, 35, 157, 20);
+		add(lblListOfNonzoned);
 
 	}
-
 }
