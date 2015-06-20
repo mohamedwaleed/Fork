@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/Fork#"
+     xml:base="http://www.semanticweb.org/Fork"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/Fork"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#hasDevice -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/Fork#hasDevice">
+        <rdfs:range rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#hasInterface -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/Fork#hasInterface">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/Fork#Interface"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#hasInterfaceData -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/Fork#hasInterfaceData">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Interface"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#deviceHostName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#deviceHostName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#deviceID -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#deviceID">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#deviceIP -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#deviceIP">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#time -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#time">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+        <rdfs:range rdf:resource="&xsd;long"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#traffic_in -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#traffic_in">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#traffic_out -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#traffic_out">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#zoneName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#zoneName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#Device -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#Device">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#Interface -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#Interface">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#InterfaceData -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#InterfaceData">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#Router -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#Router">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#Switch -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#Switch">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Device"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/Fork#Zone -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#Zone"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

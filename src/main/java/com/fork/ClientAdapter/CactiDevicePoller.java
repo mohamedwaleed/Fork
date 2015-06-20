@@ -19,7 +19,6 @@ public class CactiDevicePoller implements IDevicePoller {
 	 *            
 	 * @return List<Device> contains all the devices objects
 	 */
-	@Override
 	public List<Device> pollDevice() {
 		List<Device> devices = new ArrayList<Device>();
 		try {

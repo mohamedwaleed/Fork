@@ -1,6 +1,6 @@
 package com.fork.domain;
 
-public class Rule {
+public class Rule extends Object {
 	private int id;
 	private String name;
 	private String rule;
@@ -39,6 +39,18 @@ public class Rule {
 
 	public void setRule(String rule) {
 		this.rule = rule;
+	}
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object s) {
+		if (id == ((Rule) s).getId())
+			return true;
+		else
+			return false;
 	}
 
 }

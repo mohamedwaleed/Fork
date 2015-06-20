@@ -15,7 +15,6 @@ public class CactiParser implements IDataParser {
 	 *            Device rrd file data
 	 * @return List<InterfaceData> output InterfaceData of the rrd file data
 	 */
-	@Override
 	public List<InterfaceData> parse(String data) {
 		List<InterfaceData> list = new ArrayList<InterfaceData>();
 		Scanner in = new Scanner(data);

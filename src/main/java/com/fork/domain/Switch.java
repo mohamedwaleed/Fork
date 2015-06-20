@@ -1,5 +1,5 @@
 package com.fork.domain;
 
-public class Switch {
+public class Switch extends Device{
 
 }

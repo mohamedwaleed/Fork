@@ -1,5 +1,5 @@
 package com.fork.domain;
 
-public class Router {
+public class Router extends Device{
 
 }

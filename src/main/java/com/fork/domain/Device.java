@@ -1,9 +1,13 @@
 package com.fork.domain;
 
-public class Device {
+import java.util.List;
+
+public class Device extends Object{
 	private String IP;
 	private String ID;
 	private String hostName;
+	private List<Interface> interfaces;
+	
 
 	public void setIP(String IP) {
 		this.IP = IP;
@@ -27,6 +31,27 @@ public class Device {
 
 	public String getHostName() {
 		return hostName;
+	}
+
+	@Override
+	public String toString() {
+		return hostName;
+	}
+
+	@Override
+	public boolean equals(Object s) {
+		if (hostName.equals(((Device) s).getHostName()))
+			return true;
+		else
+			return false;
+	}
+
+	public List<Interface> getInterfaces() {
+		return interfaces;
+	}
+
+	public void setInterfaces(List<Interface> interfaces) {
+		this.interfaces = interfaces;
 	}
 
 }
