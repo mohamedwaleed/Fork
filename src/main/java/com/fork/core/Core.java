@@ -5,18 +5,22 @@ import java.util.Timer;
 public class Core extends Thread {
 	private Thread t;
 	private String threadName;
+	private int interval;
 
 	public Core(String name) {
 		threadName = name;
+		interval = 5000;
 		System.out.println("Creating " + threadName);
 	}
 
 	public void run() {
 		System.out.println("Running " + threadName);
 
+		// get devices
+
 		Timer timer = new Timer();
-		UpdateJena update = new UpdateJena();
-		timer.schedule(update, 0, 5000);
+		ForkRuntime forkRuntime = new ForkRuntime();
+		timer.schedule(forkRuntime, 0, interval);
 
 		System.out.println("Thread " + threadName + " exiting.");
 	}
