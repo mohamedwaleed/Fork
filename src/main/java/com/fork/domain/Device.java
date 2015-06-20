@@ -2,12 +2,11 @@ package com.fork.domain;
 
 import java.util.List;
 
-public class Device extends Object{
+public class Device extends Object {
 	private String IP;
 	private String ID;
 	private String hostName;
 	private List<Interface> interfaces;
-	
 
 	public void setIP(String IP) {
 		this.IP = IP;
@@ -53,5 +52,4 @@ public class Device extends Object{
 	public void setInterfaces(List<Interface> interfaces) {
 		this.interfaces = interfaces;
 	}
-
 }

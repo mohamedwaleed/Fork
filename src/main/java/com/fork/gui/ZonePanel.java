@@ -43,7 +43,7 @@ public class ZonePanel extends JPanel {
 		jenaRetrieval = new JenaRetrieval();
 		String URL = "http://www.semanticweb.org/Fork#";
 		jenaRetrieval.setOntURL(URL);
-		
+
 		setLayout(null);
 
 		zoneArea = new ZoneArea();

@@ -1,10 +1,6 @@
 package com.fork.ClientAdapter;
 
-import static org.junit.Assert.*;
-import java.util.List;
-import junit.framework.Assert;
 import org.junit.Test;
-import com.fork.domain.Device;
 
 public class CactiDataPollerTest {
 

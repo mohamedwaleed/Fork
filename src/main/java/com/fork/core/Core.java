@@ -14,14 +14,10 @@ public class Core extends Thread {
 	public void run() {
 		System.out.println("Running " + threadName);
 
-		
-		
 		Timer timer = new Timer();
 		UpdateJena update = new UpdateJena();
 		timer.schedule(update, 0, 5000);
 
-		
-		
 		System.out.println("Thread " + threadName + " exiting.");
 	}
 

@@ -2,6 +2,7 @@ package com.fork.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,7 +58,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		jenaRetrieval = new JenaRetrieval();
 		String URL = "http://www.semanticweb.org/Fork#";
 		jenaRetrieval.setOntURL(URL);
-		
+
 		this.par = d;
 		labels = new ArrayList<JLabel>();
 		setResizable(false);
