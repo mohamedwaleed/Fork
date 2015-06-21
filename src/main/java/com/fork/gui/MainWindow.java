@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import com.fork.core.Core;
+import com.fork.backgroundProcess.ForkBackgroundProcess;
 import com.fork.persistance.sqlite.DatabaseConnector;
 
 import javax.swing.SwingConstants;

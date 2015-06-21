@@ -1,13 +1,13 @@
-package com.fork.core;
+package com.fork.backgroundProcess;
 
 import java.util.Timer;
 
-public class Core extends Thread {
+public class ForkBackgroundProcess extends Thread {
 	private Thread t;
 	private String threadName;
 	private int interval;
 
-	public Core(String name) {
+	public ForkBackgroundProcess(String name) {
 		threadName = name;
 		interval = 5000;
 		System.out.println("Creating " + threadName);

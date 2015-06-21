@@ -1,6 +1,6 @@
 package com.fork;
 
-import com.fork.core.Core;
+import com.fork.backgroundProcess.ForkBackgroundProcess;
 import com.fork.gui.MainWindow;
 import com.fork.persistance.sqlite.DatabaseConnector;
 
@@ -19,7 +19,7 @@ public class Main {
 	}
 
 	private static void initializeCoreThread() {
-		Core core = new Core("Thread-1");
+		ForkBackgroundProcess core = new ForkBackgroundProcess("Thread-1");
 		core.start();
 	}
 

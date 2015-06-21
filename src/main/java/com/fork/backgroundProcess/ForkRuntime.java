@@ -1,4 +1,4 @@
-package com.fork.core;
+package com.fork.backgroundProcess;
 
 import java.util.TimerTask;
 
@@ -12,7 +12,7 @@ public class ForkRuntime extends TimerTask {
 		// create an abject of ForkLifecycle
 		// call functions stack
 		
-		ForkLifecycle forkLifecycle = new ForkLifecycle();
-		
+		IForkLifecycle appLifecycle  = new ForkLifecycle();
+	
 	}
 }
