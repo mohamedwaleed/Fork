@@ -110,7 +110,13 @@ public class InterfacePanel extends JPanel {
 
 	protected void convertInputToCondition() {
 		System.out.println("  " + device.getHostName() + "  " + device.getIP());
-		conditions.add("new String");
+		String interfaceS = ((Interface)model.getElementAt(list.getSelectedIndex())).getInterfaceName();
+		String inMn = inMin.getText().toString();
+		String inMx = inMax.getText().toString();
+		String outMn = outMin.getText().toString();
+		String outMx = outMax.getText().toString();
+		String condition = device.getHostName()+"?"+interfaceS+"?"+inMn+"?"+inMx+"?"+outMn+"?"+outMx;
+		conditions.add(condition);
 		
 		JOptionPane.showMessageDialog (InterfacePanel.this, "Condition has been added", "Success", JOptionPane.INFORMATION_MESSAGE);
 		

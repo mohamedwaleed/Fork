@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fork.domain.Device;
+import com.fork.domain.Switch;
 
 public class CactiDevicePoller implements IDevicePoller {
 
@@ -26,12 +27,13 @@ public class CactiDevicePoller implements IDevicePoller {
 
 			Connection con = DriverManager
 					.getConnection("jdbc:mysql://localhost:3306/cacti",
-							"cactiuser", "cactipw");
+							"cacti", "12345");
 			Statement stmt = con.createStatement();
 			ResultSet resultSet = stmt.executeQuery("select * from host");
 
 			while (resultSet.next()) {
-				Device device = new Device();
+				//Device device = new Device();
+				Device device = new Switch();
 				device.setID(String.valueOf(resultSet.getInt("id")));
 				device.setIP(resultSet.getString("hostname"));
 				device.setHostName(resultSet.getString("description"));

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
-import com.fork.domain.InterfaceData;
 import com.fork.domain.Router;
+import com.fork.domain.Rule;
 import com.fork.domain.Switch;
 import com.fork.domain.Zone;
 import com.hp.hpl.jena.query.ResultSet;
@@ -70,7 +70,8 @@ public class JenaRetrieval {
 			addInterface(interfaces.get(i));
 			String interfaceName = interfaces.get(i).getInterfaceName();
 			String interfaceURL = "<" + this.URL + interfaceName + ">";
-			query[i + 5] = deviceURL + " foaf:hasInterface " + interfaceURL;
+			query[i + 5] = deviceURL + " foaf:hasInterface " + interfaceURL
+					+ ".\n";
 		}
 		query[5 + interfaces.size()] = "}\n";
 		String insertQuery = "";
@@ -86,10 +87,9 @@ public class JenaRetrieval {
 		String interfaceURL = "<" + this.URL + intrface.getInterfaceName()
 				+ ">";
 		String interfaceDataURL = "<" + this.URL + intrface.getInterfaceName()
-				+ ">";
+				+ "Data>";
+		addInterfaceData(intrface);
 		String[] query = new String[4];
-		addInterfaceData(intrface.getInterfaceData(),
-				intrface.getInterfaceName());
 		query[0] = "INSERT DATA {\n";
 		query[1] = interfaceURL + " a foaf:Interface.\n";
 		query[2] = interfaceURL + " foaf:hasInterfaceData " + interfaceDataURL
@@ -104,17 +104,18 @@ public class JenaRetrieval {
 		rdfq.execute(QueryType.INSERT);
 	}
 
-	private void addInterfaceData(InterfaceData interfaceData, String ID) {
-		String interfaceDataURL = "<" + this.URL + ID + ">";
+	private void addInterfaceData(Interface intrface) {
+		String interfaceDataURL = "<" + this.URL + intrface.getInterfaceName()
+				+ "Data>";
 		String[] query = new String[6];
 		query[0] = "INSERT DATA {\n";
 		query[1] = interfaceDataURL + " a foaf:InterfaceData.\n";
-		query[2] = interfaceDataURL + " foaf:time " + interfaceData.getTime()
-				+ ".\n";
+		query[2] = interfaceDataURL + " foaf:time "
+				+ intrface.getInterfaceData().getTime() + ".\n";
 		query[3] = interfaceDataURL + " foaf:traffic_in "
-				+ interfaceData.getInBound() + ".\n";
+				+ intrface.getInterfaceData().getInBound() + ".\n";
 		query[4] = interfaceDataURL + " foaf:traffic_out "
-				+ interfaceData.getOutBound() + ".\n";
+				+ intrface.getInterfaceData().getOutBound() + ".\n";
 		query[5] = "}\n";
 		String insertQuery = "";
 		for (int i = 0; i < 6; ++i)
@@ -123,6 +124,37 @@ public class JenaRetrieval {
 		rdfq.setPrefix(this.prefix);
 		rdfq.setStmt(insertQuery);
 		rdfq.execute(QueryType.INSERT);
+	}
+
+	public void deleteDevice(Device device) {
+		String deviceType = "";
+		if (device instanceof Router)
+			deviceType = DeviceType.Router.toString();
+		else if (device instanceof Switch)
+			deviceType = DeviceType.Switch.toString();
+		String deviceURL = "<" + this.URL + device.getID() + ">";
+		String[] query = new String[13];
+		query[0] = "DELETE WHERE {\n";
+		query[1] = deviceURL + " foaf:deviceID ?ID.\n";
+		query[2] = deviceURL + " foaf:deviceIP ?IP.\n";
+		query[3] = deviceURL + " foaf:deviceHostName ?hostName.\n";
+		query[4] = deviceURL + " foaf:hasInterface ?interface.\n";
+		query[5] = deviceURL + " a <" + this.URL + deviceType + ">.\n";
+		query[6] = "?interface foaf:hasInterfaceData ?interfaceData.\n";
+		query[7] = "?interface a <" + this.URL + "Interface>.\n";
+		query[8] = "?interfaceData a <" + this.URL + "InterfaceData>.\n";
+		query[9] = "?interfaceData foaf:time ?time.\n";
+		query[10] = "?interfaceData foaf:traffic_in ?trafficIn.\n";
+		query[11] = "?interfaceData foaf:traffic_out ?trafficOut.\n";
+		query[12] = "}\n";
+		String deleteQuery = "";
+		for (int i = 0; i < 13; ++i)
+			deleteQuery += query[i];
+		System.out.println(deleteQuery);
+		RdfQuery rdfq = RdfQueryFactory.getQuery();
+		rdfq.setPrefix(this.prefix);
+		rdfq.setStmt(deleteQuery);
+		rdfq.execute(QueryType.UPDATE);
 	}
 
 	public List<Zone> getZones() {
@@ -142,18 +174,18 @@ public class JenaRetrieval {
 	}
 
 	public List<Device> getZoneDevices(Zone zone) {
-		String[] query = new String[9];
+		String[] query = new String[8];
 		query[0] = "SELECT ?className ?deviceID ?deviceIP ?deviceHostName\n";
 		query[1] = "WHERE {\n";
-		query[2] = "?zone a <" + this.URL + "Zone>.\n";
-		query[3] = "?zone foaf:hasDevice ?device.\n";
-		query[4] = "?device a ?className.\n";
-		query[5] = "?device foaf:deviceID ?deviceID.\n";
-		query[6] = "?device foaf:deviceIP ?deviceIP.\n";
-		query[7] = "?device foaf:deviceHostName ?deviceHostName.\n";
-		query[8] = "}\n";
+		query[2] = "<" + this.URL + zone.getName()
+				+ "> foaf:hasDevice ?device.\n";
+		query[3] = "?device a ?className.\n";
+		query[4] = "?device foaf:deviceID ?deviceID.\n";
+		query[5] = "?device foaf:deviceIP ?deviceIP.\n";
+		query[6] = "?device foaf:deviceHostName ?deviceHostName.\n";
+		query[7] = "}\n";
 		String selectQuery = "";
-		for (int i = 0; i < 9; ++i)
+		for (int i = 0; i < 8; ++i)
 			selectQuery += query[i];
 		RdfQuery rdfq = RdfQueryFactory.getQuery();
 		rdfq.setPrefix(this.prefix);
@@ -232,5 +264,41 @@ public class JenaRetrieval {
 		rdfq.setStmt(selectQuery);
 		ResultSet result = rdfq.execute(QueryType.SELECT);
 		return new ParseResultSet().getInterfaces(result);
+	}
+
+	public boolean fireRule(Rule rule) {
+		int size = rule.getDevicesName().size();
+		for (int i = 0; i < size; ++i) {
+			String[] query = new String[17];
+			query[0] = "SELECT ?device WHERE {\n";
+			query[1] = "?className rdfs:subClassOf <" + this.URL + "Device>.\n";
+			query[2] = "?device a ?className.\n";
+			query[3] = "?device foaf:deviceHostName ?deviceHostName.\n";
+			query[4] = "?device foaf:hasInterface ?interface.\n";
+			query[5] = "?interface foaf:hasInterfaceData ?interfaceData.\n";
+			query[6] = "?interfaceData foaf:traffic_in ?trafficIn.\n";
+			query[7] = "?interfaceData foaf:traffic_out ?trafficOut.\n";
+			query[8] = "FILTER(\n";
+			query[9] = "?deviceHostName = \"" + rule.getDevicesName().get(i)
+					+ "\"\n";
+			query[10] = "&& ?interface = <" + this.URL
+					+ rule.getInterfacesName().get(i) + ">\n";
+			query[11] = "&& ?trafficIn >= " + rule.getInMn().get(i) + "\n";
+			query[12] = "&& ?trafficIn <= " + rule.getInMx().get(i) + "\n";
+			query[13] = "&& ?trafficOut >= " + rule.getOutMn().get(i) + "\n";
+			query[14] = "&& ?trafficOut <= " + rule.getOutMx().get(i) + "\n";
+			query[15] = ").\n";
+			query[16] = "}\n";
+			String selectQuery = "";
+			for (int j = 0; j < 17; ++j)
+				selectQuery += query[j];
+			RdfQuery rdfq = RdfQueryFactory.getQuery();
+			rdfq.setPrefix(this.prefix);
+			rdfq.setStmt(selectQuery);
+			ResultSet result = rdfq.execute(QueryType.SELECT);
+			if (!result.hasNext())
+				return false;
+		}
+		return true;
 	}
 }

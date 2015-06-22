@@ -27,13 +27,13 @@ import com.fork.persistance.rdf.JenaRetrieval;
 public class ZonePanel extends JPanel {
 	private JTextField textField;
 
-	private List<Device> devices;
+	private static List<Device> devices;
 	private List<Device> choosenDevices;
 	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
-	private JList list;
+	private static DefaultListModel model;
+	private static JList list;
 	private ZoneArea zoneArea;
-	private JenaRetrieval jenaRetrieval;
+	private static JenaRetrieval jenaRetrieval;
 
 	/**
 	 * Create the panel.
@@ -67,22 +67,9 @@ public class ZonePanel extends JPanel {
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		add(liftList);
 		liftList.setLayout(new BorderLayout(0, 0));
-
-		// devices = JenaRetrieval.getAvailableDevices();
-		devices = new ArrayList<Device>();
-		Device d = new Device();
-		d.setID("1");
-		d.setHostName("islam");
-		d.setIP("192");
-		devices.add(d);
-		d = new Device();
-		d.setID("2");
-		d.setHostName("Ahmed");
-		d.setIP("168");
-		devices.add(d);
-
 		choosenDevices = new ArrayList<Device>();
-
+		devices = new ArrayList<Device>();
+		
 		model = new DefaultListModel();
 		for (int i = 0; i < devices.size(); i++)
 			model.addElement(((Device) devices.get(i)));
@@ -119,7 +106,7 @@ public class ZonePanel extends JPanel {
 				if (!textField.getText().toString().isEmpty()) {
 					Zone zone = new Zone();
 					zone.setName(textField.getText().toString());
-					jenaRetrieval.addZone(zone, devices);
+					jenaRetrieval.addZone(zone, choosenDevices);
 				}
 
 			}
@@ -131,5 +118,13 @@ public class ZonePanel extends JPanel {
 		lblListOfNonzoned.setBounds(10, 35, 157, 20);
 		add(lblListOfNonzoned);
 
+	}
+	
+	public static void updateList(){
+		devices = jenaRetrieval.getFreeDevices();
+		model = new DefaultListModel();
+		for (int i = 0; i < devices.size(); i++)
+			model.addElement(((Device) devices.get(i)));
+		list.setModel(model);
 	}
 }

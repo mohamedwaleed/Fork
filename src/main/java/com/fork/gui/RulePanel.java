@@ -109,20 +109,6 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		add(liftList1);
 
 		RulesNames = DatabaseLogic.getRules();
-
-		Rule s = new Rule();
-		s.setId(1);
-		s.setName("islam");
-		s.setRule("rule1");
-		s.setState(1);
-		RulesNames.add(s);
-		s = new Rule();
-		s.setId(2);
-		s.setName("ahm");
-		s.setRule("rule2");
-		s.setState(0);
-		RulesNames.add(s);
-
 		model = new DefaultListModel();
 		for (int i = 0; i < RulesNames.size(); i++)
 			model.addElement(((Rule) RulesNames.get(i)));

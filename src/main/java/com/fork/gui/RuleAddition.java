@@ -49,6 +49,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	private JTextArea ruleName;
 	private RulePanel par;
 	private JenaRetrieval jenaRetrieval;
+	private List<Device> zoneDevices;
 
 	/**
 	 * Create the panel.
@@ -90,14 +91,6 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		model = new DefaultListModel();
 		zones = jenaRetrieval.getZones();
 
-		zones = new ArrayList<Zone>();
-		Zone s = new Zone();
-		s.setName("ilam");
-		zones.add(s);
-		s = new Zone();
-		s.setName("moha");
-		zones.add(s);
-
 		for (int i = 0; i < zones.size(); i++)
 			model.addElement(((Zone) zones.get(i)));
 		list = new JList(model);
@@ -120,13 +113,15 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 			public void actionPerformed(ActionEvent e) {
 				String name = ruleName.getText().toString();
 				List<String> conditions = interfacePanel.getConditions();
-				if (!name.isEmpty() && !conditions.isEmpty()) {
-					String query = "islam";
-
-					// /////////////////////////////////////////////////////////////////////////////
-
-					showChooseScriptDialog(name, query);
+				String rule = "";
+				for (int i = 0; i < conditions.size(); i++) {
+					if (i < conditions.size() - 1)
+						rule += (conditions.get(i) + "&");
+					else
+						rule += conditions.get(i);
 				}
+				if (!name.isEmpty() && !conditions.isEmpty())
+					showChooseScriptDialog(name, rule);
 			}
 		});
 		btnNewButton.setBounds(522, 11, 251, 23);
@@ -178,22 +173,11 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		if (!e.getValueIsAdjusting()) {
 			zoneArea.removeAllComponents();
 			if (list.getSelectedIndex() != -1) {
-				List<Device> zoneDevices = new ArrayList<Device>();
 				zoneDevices = jenaRetrieval.getZoneDevices((Zone) model
 						.getElementAt(list.getSelectedIndex()));
 
-				zoneDevices = new ArrayList<Device>();
-				Device d = new Device();
-				d.setID("1");
-				d.setHostName("islam");
-				d.setIP("192");
-				zoneDevices.add(d);
-				d = new Device();
-				d.setID("2");
-				d.setHostName("Ahmed");
-				d.setIP("168");
-				zoneDevices.add(d);
-
+				System.out.println((Zone) model.getElementAt(list
+						.getSelectedIndex()));
 				for (int i = 0; i < zoneDevices.size(); i++) {
 					JLabel tmp = zoneArea.addImage(zoneDevices.get(i)
 							.getHostName(), zoneDevices.get(i).getIP());
@@ -209,28 +193,10 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		for (int i = 0; i < labels.size(); i++) {
 			if (label == labels.get(i)) {
 				System.out.println(label.getText().toString());
-				Device device = new Device();
-				device.setIP(label.getText().toString().split("-")[1]);
-				device.setHostName(label.getText().toString().split("-")[0]);
-				List<Interface> interfaces = device.getInterfaces();
 
-				if (label.getText().toString().equals("islam-192")) {
-					interfaces = new ArrayList<Interface>();
-					Interface in = new Interface();
-					in.setInterfaceName("Ali");
-					interfaces.add(in);
-					in = new Interface();
-					in.setInterfaceName("Mohamed");
-					interfaces.add(in);
-				} else {
-					interfaces = new ArrayList<Interface>();
-					Interface in = new Interface();
-					in.setInterfaceName("hahahahhahahha");
-					interfaces.add(in);
-					in = new Interface();
-					in.setInterfaceName("done it");
-					interfaces.add(in);
-				}
+				Device device = zoneDevices.get(i);
+				List<Interface> interfaces = device.getInterfaces();
+				System.out.println("Test:  " + interfaces.size());
 
 				interfacePanel.addInteefaces(interfaces, device);
 				break;

@@ -19,10 +19,11 @@ public class CactiParser implements IDataParser {
 		List<InterfaceData> list = new ArrayList<InterfaceData>();
 		Scanner in = new Scanner(data);
 		in.nextLine();
+		in.nextLine();
 		while (in.hasNextLine()) {
 			String line = in.nextLine();
 			String[] twoParts = line.split(": ");
-			long time = Long.valueOf(twoParts[0]);
+			long time = Long.parseLong(twoParts[0]);
 			String inB = twoParts[1].split(" ")[0], outB = twoParts[1]
 					.split(" ")[1];
 			if (!inB.equals("-nan") && !outB.equals("-nan")) {
@@ -30,8 +31,7 @@ public class CactiParser implements IDataParser {
 				double outBound = Double.valueOf(outB);
 				list.add(new InterfaceData(time, inBound, outBound));
 			} else
-				list.add(new InterfaceData(time, Double.NEGATIVE_INFINITY,
-						Double.NEGATIVE_INFINITY));
+				list.add(new InterfaceData(time, -1, -1));
 		}
 		in.close();
 		return list;

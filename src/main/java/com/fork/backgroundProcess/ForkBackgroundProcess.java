@@ -9,14 +9,12 @@ public class ForkBackgroundProcess extends Thread {
 
 	public ForkBackgroundProcess(String name) {
 		threadName = name;
-		interval = 5000;
+		interval = 300000;
 		System.out.println("Creating " + threadName);
 	}
 
 	public void run() {
 		System.out.println("Running " + threadName);
-
-		// get devices
 
 		Timer timer = new Timer();
 		ForkRuntime forkRuntime = new ForkRuntime();

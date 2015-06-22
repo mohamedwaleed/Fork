@@ -32,9 +32,11 @@ public class CactiLinuxRrdInfo implements ICactiRrd {
 			String[] filesWords = deviceRRDS.get(i).split("_");
 			String interfaceName = filesWords[words.length];
 			for (int j = words.length + 1; j < filesWords.length - 1; ++j) {
-				interfaceName += " ";
+				interfaceName += "_";
 				interfaceName += filesWords[j];
 			}
+			// System.out.println(deviceRRDS.get(i));
+			// System.out.println(data);
 			boolean flag = true;
 			for (int j = 0; j < interfaces.size(); ++j)
 				if (interfaces.get(j).getInterfaceName().equals(interfaceName))
@@ -42,14 +44,17 @@ public class CactiLinuxRrdInfo implements ICactiRrd {
 			List<InterfaceData> interfaceData = null;
 			if (flag) {
 				Interface intrface = new Interface();
-				intrface.setInterfaceName(device.getID() + "_" + interfaceName);
+				intrface.setInterfaceName(interfaceName);
 				interfaceData = new CactiParser().parse(data);
 				int last = interfaceData.size() - 1;
 				intrface.setInterfaceData(interfaceData.get(last));
 				interfaces.add(intrface);
 			}
 		}
-
+		for (int i = 0; i < interfaces.size(); ++i) {
+			String old = interfaces.get(i).getInterfaceName();
+			interfaces.get(i).setInterfaceName(device.getID() + "_" + old);
+		}
 		return interfaces;
 	}
 
