@@ -17,7 +17,7 @@ public class CactiDevicePoller implements IDevicePoller {
 	 * Method for get devices data from Cacti sql database
 	 * 
 	 * @param NULL
-	 *            
+	 * 
 	 * @return List<Device> contains all the devices objects
 	 */
 	public List<Device> pollDevice() {
@@ -25,15 +25,13 @@ public class CactiDevicePoller implements IDevicePoller {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
-			Connection con = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/cacti",
-							"cacti", "12345");
+			Connection con = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/cacti", "cacti", "12345");
 			Statement stmt = con.createStatement();
 			ResultSet resultSet = stmt.executeQuery("select * from host");
 
 			while (resultSet.next()) {
-				//Device device = new Device();
-				Device device = new Switch();
+				Device device = new Device();
 				device.setID(String.valueOf(resultSet.getInt("id")));
 				device.setIP(resultSet.getString("hostname"));
 				device.setHostName(resultSet.getString("description"));

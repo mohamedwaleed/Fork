@@ -1,6 +1,7 @@
 package com.fork.domain;
 
 public class Interface extends Object {
+	private String interfaceID;
 	private String interfaceName;
 	private InterfaceData interfaceData;
 
@@ -34,6 +35,14 @@ public class Interface extends Object {
 			return true;
 		else
 			return false;
+	}
+
+	public String getInterfaceID() {
+		return interfaceID;
+	}
+
+	public void setInterfaceID(String intrefaceID) {
+		this.interfaceID = intrefaceID;
 	}
 
 }

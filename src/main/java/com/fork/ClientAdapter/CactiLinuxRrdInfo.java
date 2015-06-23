@@ -1,80 +1,63 @@
 package com.fork.ClientAdapter;
 
-import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.stamfest.rrd.CommandResult;
-import net.stamfest.rrd.RRDp;
 
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
 import com.fork.domain.InterfaceData;
 
 public class CactiLinuxRrdInfo implements ICactiRrd {
-	private String linuxBaseDir = "/var/lib/cacti/rra/";
 
 	public List<Interface> getRrdsInfo(Device device) throws Exception {
 		// TODO Auto-generated method stub
-		RRDp command = null;
-		CommandResult commandResult = null;
-
-		command = new RRDp("/tmp", "/rrdcached.sock");
+		int ID = 0;
 		List<Interface> interfaces = new ArrayList<Interface>();
-		List<String> deviceRRDS = getLinuxRRDSInfo(device);
-		String[] words = device.getHostName().split(" ");
-		for (int i = 0; i < deviceRRDS.size(); ++i) {
-			String[] cmd = { "fetch", linuxBaseDir + deviceRRDS.get(i),
-					"AVERAGE" };
-			commandResult = command.command(cmd);
-			String data = commandResult.getOutput();
-			// Get Interface Name.
-			String[] filesWords = deviceRRDS.get(i).split("_");
-			String interfaceName = filesWords[words.length];
-			for (int j = words.length + 1; j < filesWords.length - 1; ++j) {
-				interfaceName += "_";
-				interfaceName += filesWords[j];
-			}
-			// System.out.println(deviceRRDS.get(i));
-			// System.out.println(data);
-			boolean flag = true;
-			for (int j = 0; j < interfaces.size(); ++j)
-				if (interfaces.get(j).getInterfaceName().equals(interfaceName))
-					flag = false;
-			List<InterfaceData> interfaceData = null;
-			if (flag) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+
+			Connection con = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/cacti", "cacti", "12345");
+			Statement stmt = con.createStatement();
+			String selectQuery = "select distinct rrd_path, field_value\n"
+					+ "from data_local, poller_item, host_snmp_cache\n"
+					+ "where  data_local.id = poller_item.local_data_id\n"
+					+ "and  data_local.snmp_index = host_snmp_cache.snmp_index\n"
+					+ "and data_local.host_id = "
+					+ device.getID()
+					+ "\n"
+					+ "and (field_name = 'ifAlias' or field_name = 'ifDescr')\n"
+					+ "ORDER BY data_local.id, field_name";
+			ResultSet resultSet = stmt.executeQuery(selectQuery);
+			CactiParser cactiParser = new CactiParser();
+			while (resultSet.next()) {
+				String rrdPath = resultSet.getString("rrd_path");
+				// One interface has two names (ifAlias, ifDescr)
+				String fieldValue1 = resultSet.getString("field_value");
+				resultSet.next();
+				String fieldValue2 = resultSet.getString("field_value");
+
+				String interfaceName = fieldValue2 + fieldValue1;
+				InterfaceData interfaceData = cactiParser.parse(rrdPath);
 				Interface intrface = new Interface();
+				intrface.setInterfaceID(device.getID() + "_" + Integer.toString(ID));
 				intrface.setInterfaceName(interfaceName);
-				interfaceData = new CactiParser().parse(data);
-				int last = interfaceData.size() - 1;
-				intrface.setInterfaceData(interfaceData.get(last));
+				intrface.setInterfaceData(interfaceData);
 				interfaces.add(intrface);
+				++ID;
 			}
-		}
-		for (int i = 0; i < interfaces.size(); ++i) {
-			String old = interfaces.get(i).getInterfaceName();
-			interfaces.get(i).setInterfaceName(device.getID() + "_" + old);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return interfaces;
-	}
-
-	private List<String> getLinuxRRDSInfo(Device device) {
-		File file = new File(linuxBaseDir);
-		String[] rrdFileNames = file.list();
-		String[] words = device.getHostName().split(" ");
-		List<String> deviceRRDS = new ArrayList<String>();
-		for (int i = 0; i < rrdFileNames.length; i++) {
-			String[] filesWords = rrdFileNames[i].split("_");
-			int flag = 1;
-			for (int j = 0; j < words.length; j++) {
-				if (j == filesWords.length || !words[j].equals(filesWords[j])) {
-					flag = 0;
-					break;
-				}
-			}
-			if (flag == 1)
-				deviceRRDS.add(rrdFileNames[i]);
-		}
-		return deviceRRDS;
 	}
 }

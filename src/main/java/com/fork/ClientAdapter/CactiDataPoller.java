@@ -7,7 +7,6 @@ import com.fork.domain.Interface;
 import com.fork.utills.Factory;
 
 public class CactiDataPoller implements IDataPoller {
-	private String windowsBaseDir = "C:\\Cacti\\Apache2\\htdocs\\cacti\\rra\\";
 	private String baseClassName = "com.fork.ClientAdapter.";
 
 	/**

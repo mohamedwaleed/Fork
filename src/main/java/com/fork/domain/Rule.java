@@ -56,7 +56,7 @@ public class Rule extends Object {
 		outMx = new ArrayList<String>();
 		String[] condations = this.rule.split("&");
 		for (int i = 0; i < condations.length; ++i) {
-			String[] parts = condations[i].split("?");
+			String[] parts = condations[i].split("#");
 			devicesName.add(parts[0]);
 			interfacesName.add(parts[1]);
 			inMn.add(parts[2]);

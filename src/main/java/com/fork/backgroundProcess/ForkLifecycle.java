@@ -5,32 +5,48 @@ import java.util.List;
 import com.fork.ClientAdapter.CactiDataPoller;
 import com.fork.ClientAdapter.CactiDevicePoller;
 import com.fork.domain.Device;
+import com.fork.domain.Interface;
 import com.fork.persistance.rdf.JenaRetrieval;
 
 public class ForkLifecycle implements IForkLifecycle {
 
-	@Override
 	public List<Device> updateDevicesData() {
 		CactiDevicePoller cactiDevicePoller = new CactiDevicePoller();
 		CactiDataPoller cactiDataPoller = new CactiDataPoller();
 		JenaRetrieval jenaRetrieval = new JenaRetrieval();
-		String URL = "http://www.semanticweb.org/Fork#";
-		jenaRetrieval.setOntURL(URL);
-		List<Device> devices = cactiDevicePoller.pollDevice();
-		List<Device> oldDevices = jenaRetrieval.getDevices();
-		for (Device oldDevice : oldDevices)
-			jenaRetrieval.deleteDevice(oldDevice);
 
-		for (Device device : devices) {
+		List<Device> oldDevices = jenaRetrieval.getAllDevices();
+		List<Device> newDevices = cactiDevicePoller.pollDevice();
+		for (Device oldDevice : oldDevices) {
+			jenaRetrieval.deleteDevice(oldDevice);
+			for (Interface intrface : oldDevice.getInterfaces()) {
+				jenaRetrieval.deleteInterface(intrface);
+				jenaRetrieval.deleteDeviceInterfaceRelation(oldDevice, intrface);
+			}
+		}
+		for (Device newDevice : newDevices) {
 			try {
-				device.setInterfaces(cactiDataPoller.pollData(device));
-				jenaRetrieval.addDevice(device);
+				newDevice.setInterfaces(cactiDataPoller.pollData(newDevice));
+				jenaRetrieval.addDevice(newDevice);
+				for (Interface intrface : newDevice.getInterfaces()) {
+					jenaRetrieval.addInterface(intrface);
+					jenaRetrieval.addDeviceInterfaceRelation(newDevice,
+							intrface);
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return devices;
+		for (Device oldDevice : oldDevices) {
+			boolean deviceFound = false;
+			for (Device newDevice : newDevices)
+				if (oldDevice.getID().equals(newDevice.getID()))
+					deviceFound = true;
+			if (!deviceFound)
+				jenaRetrieval.deleteZoneDeviceRelation(oldDevice);
+		}
+		return newDevices;
 	}
 
 }

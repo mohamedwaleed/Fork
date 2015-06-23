@@ -129,6 +129,12 @@
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
     
+    <!-- http://www.semanticweb.org/Fork#interfaceName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#interfaceName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Interface"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
 
 
     <!-- 

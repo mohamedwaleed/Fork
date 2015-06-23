@@ -101,7 +101,7 @@ public class InterfacePanel extends JPanel {
 		});
 		btnNewButton.setBounds(385, 161, 115, 35);
 		panel_1.add(btnNewButton);
-		
+
 		JLabel lblListOfInterfaces = new JLabel("List of interfaces");
 		lblListOfInterfaces.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListOfInterfaces.setBounds(10, 7, 223, 14);
@@ -110,16 +110,20 @@ public class InterfacePanel extends JPanel {
 
 	protected void convertInputToCondition() {
 		System.out.println("  " + device.getHostName() + "  " + device.getIP());
-		String interfaceS = ((Interface)model.getElementAt(list.getSelectedIndex())).getInterfaceName();
+		String interfaceS = ((Interface) model.getElementAt(list
+				.getSelectedIndex())).getInterfaceName();
 		String inMn = inMin.getText().toString();
 		String inMx = inMax.getText().toString();
 		String outMn = outMin.getText().toString();
 		String outMx = outMax.getText().toString();
-		String condition = device.getHostName()+"?"+interfaceS+"?"+inMn+"?"+inMx+"?"+outMn+"?"+outMx;
+		String condition = device.getHostName() + "#" + interfaceS + "#" + inMn
+				+ "#" + inMx + "#" + outMn + "#" + outMx;
 		conditions.add(condition);
-		
-		JOptionPane.showMessageDialog (InterfacePanel.this, "Condition has been added", "Success", JOptionPane.INFORMATION_MESSAGE);
-		
+
+		JOptionPane.showMessageDialog(InterfacePanel.this,
+				"Condition has been added", "Success",
+				JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
 	public void addInteefaces(List<Interface> interfaces, Device device) {
@@ -131,7 +135,8 @@ public class InterfacePanel extends JPanel {
 			list.setModel(model);
 		}
 	}
-	public List<String> getConditions(){
+
+	public List<String> getConditions() {
 		return conditions;
 	}
 }

@@ -46,9 +46,10 @@ public class ParseResultSet {
 		List<Interface> interfaces = new ArrayList<Interface>();
 		while (result.hasNext()) {
 			QuerySolution row = result.nextSolution();
-			String interfaceName = row.get("interfaceName").toString()
-					.split("#")[1];
+			String interfaceID = row.get("interface").toString().split("#")[1];
+			String interfaceName = row.get("interfaceName").toString();
 			Interface intrface = new Interface();
+			intrface.setInterfaceID(interfaceID);
 			intrface.setInterfaceName(interfaceName);
 			InterfaceData interfaceData = new InterfaceData();
 			interfaceData.setTime(row.getLiteral("time").getLong());

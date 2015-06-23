@@ -8,4 +8,5 @@ public class RdfUtilty {
 
 	static public String BASE_URL = "http://localhost:3030/Fork";
 
+	static public String OWL_URL = "http://www.semanticweb.org/Fork#";
 }

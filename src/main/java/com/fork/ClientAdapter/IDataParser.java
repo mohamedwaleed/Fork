@@ -6,6 +6,6 @@ import com.fork.domain.InterfaceData;
 
 public interface IDataParser {
 
-  public List<InterfaceData> parse(String data);
+  public InterfaceData parse(String rrdFilePath);
 
 }

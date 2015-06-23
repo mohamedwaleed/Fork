@@ -1,13 +1,16 @@
 package com.fork.ClientAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import net.stamfest.rrd.CommandResult;
+import net.stamfest.rrd.RRDp;
+
 import com.fork.domain.InterfaceData;
 
 public class CactiParser implements IDataParser {
-
 	/**
 	 * Method for parse an rrd file data to list of InterfaceData
 	 * 
@@ -15,8 +18,22 @@ public class CactiParser implements IDataParser {
 	 *            Device rrd file data
 	 * @return List<InterfaceData> output InterfaceData of the rrd file data
 	 */
-	public List<InterfaceData> parse(String data) {
-		List<InterfaceData> list = new ArrayList<InterfaceData>();
+	public InterfaceData parse(String rrdFilePath) {
+		RRDp command = null;
+		CommandResult commandResult = null;
+		try {
+			command = new RRDp("/tmp", "/rrdcached.sock");
+			String[] cmd = { "fetch", rrdFilePath, "AVERAGE" };
+			commandResult = command.command(cmd);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String data = commandResult.getOutput();
+		InterfaceData interfaceData = new InterfaceData();
 		Scanner in = new Scanner(data);
 		in.nextLine();
 		in.nextLine();
@@ -29,12 +46,12 @@ public class CactiParser implements IDataParser {
 			if (!inB.equals("-nan") && !outB.equals("-nan")) {
 				double inBound = Double.valueOf(inB);
 				double outBound = Double.valueOf(outB);
-				list.add(new InterfaceData(time, inBound, outBound));
+				interfaceData = new InterfaceData(time, inBound, outBound);
 			} else
-				list.add(new InterfaceData(time, -1, -1));
+				interfaceData = new InterfaceData(time, -1, -1);
 		}
 		in.close();
-		return list;
+		return interfaceData;
 	}
 
 }

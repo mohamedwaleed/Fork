@@ -13,10 +13,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
 import com.fork.domain.Device;
@@ -41,8 +43,6 @@ public class ZonePanel extends JPanel {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ZonePanel() {
 		jenaRetrieval = new JenaRetrieval();
-		String URL = "http://www.semanticweb.org/Fork#";
-		jenaRetrieval.setOntURL(URL);
 
 		setLayout(null);
 
@@ -69,7 +69,7 @@ public class ZonePanel extends JPanel {
 		liftList.setLayout(new BorderLayout(0, 0));
 		choosenDevices = new ArrayList<Device>();
 		devices = new ArrayList<Device>();
-		
+
 		model = new DefaultListModel();
 		for (int i = 0; i < devices.size(); i++)
 			model.addElement(((Device) devices.get(i)));
@@ -106,12 +106,42 @@ public class ZonePanel extends JPanel {
 				if (!textField.getText().toString().isEmpty()) {
 					Zone zone = new Zone();
 					zone.setName(textField.getText().toString());
-					jenaRetrieval.addZone(zone, choosenDevices);
+					jenaRetrieval.addZone(zone);
+					for (Device device : choosenDevices)
+						jenaRetrieval.addZoneDeviceRelation(zone, device);
 				}
 
 			}
 		});
 		panel_2.add(btnNewButton_1);
+
+		JButton btnRemoveAZone = new JButton("Remove a Zone");
+		btnRemoveAZone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				ZoneRemoval djp = new ZoneRemoval();
+				UIManager
+						.put("OptionPane.minimumSize", new Dimension(400, 300));
+				int result = JOptionPane.showConfirmDialog(ZonePanel.this, djp,
+						"Pick zones to delete", JOptionPane.OK_CANCEL_OPTION);
+
+				if (result == JOptionPane.OK_OPTION) {
+					JList choosenZones = djp.getChoosenZones();
+					DefaultListModel zonesModel = djp.getModel();
+					int picked[] = choosenZones.getSelectedIndices();
+					for (int i : picked) {
+						jenaRetrieval.deleteZone((Zone) (zonesModel
+								.getElementAt(i)));
+						jenaRetrieval.deleteAllZoneRelations((Zone) (zonesModel
+								.getElementAt(i)));
+						updateList();
+					}
+
+				}
+
+			}
+		});
+		panel_2.add(btnRemoveAZone);
 
 		JLabel lblListOfNonzoned = new JLabel("List of non-zoned devices");
 		lblListOfNonzoned.setHorizontalAlignment(SwingConstants.CENTER);
@@ -119,8 +149,8 @@ public class ZonePanel extends JPanel {
 		add(lblListOfNonzoned);
 
 	}
-	
-	public static void updateList(){
+
+	public static void updateList() {
 		devices = jenaRetrieval.getFreeDevices();
 		model = new DefaultListModel();
 		for (int i = 0; i < devices.size(); i++)

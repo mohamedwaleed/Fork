@@ -57,9 +57,6 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	@SuppressWarnings("unchecked")
 	public RuleAddition(RulePanel d) {
 		jenaRetrieval = new JenaRetrieval();
-		String URL = "http://www.semanticweb.org/Fork#";
-		jenaRetrieval.setOntURL(URL);
-
 		this.par = d;
 		labels = new ArrayList<JLabel>();
 		setResizable(false);
