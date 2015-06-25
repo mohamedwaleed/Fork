@@ -24,6 +24,7 @@ import javax.swing.border.LineBorder;
 import com.fork.domain.Device;
 import com.fork.domain.Zone;
 import com.fork.outputController.RDFLogic;
+import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")
 public class ZonePanel extends JPanel {
@@ -50,6 +51,8 @@ public class ZonePanel extends JPanel {
 		add(zoneArea);
 
 		JPanel zoneName = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) zoneName.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
 		zoneName.setBounds(10, 0, 605, 30);
 		add(zoneName);
 

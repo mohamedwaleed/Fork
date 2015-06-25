@@ -96,7 +96,7 @@ public class DataSourcePanel extends JPanel {
 
 		JLabel lblNoteAnyTraffic = new JLabel("Note: Any traffic data is entered in Bits");
 		lblNoteAnyTraffic.setForeground(Color.RED);
-		lblNoteAnyTraffic.setBounds(23, 138, 248, 14);
+		lblNoteAnyTraffic.setBounds(10, 138, 261, 14);
 		panel_1.add(lblNoteAnyTraffic);
 
 		JLabel lblListOfInterfaces = new JLabel("List of data sources");

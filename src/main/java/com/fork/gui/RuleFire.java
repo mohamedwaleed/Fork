@@ -1,8 +1,10 @@
 package com.fork.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -14,23 +16,25 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import com.fork.domain.Rule;
 import com.fork.domain.Script;
 import com.fork.outputController.DatabaseLogic;
 import com.fork.outputController.ScriptRunner;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 
 public class RuleFire {
 	public JFrame frame;
 	private JList<Script> list2;
-	private DefaultListModel<String> model;
 	private DefaultListModel<Script> model2;
 	private List<Script> ruleScripts;
+	private JTextArea scriptTextArea;
+	private Rule rule;
 
-	public RuleFire(Rule rule) {
+	public RuleFire(Rule rul) {
+		this.rule = rul;
 		frame = new JFrame();
 		frame.setTitle("Rule Fired");
 		frame.setResizable(false);
@@ -40,7 +44,7 @@ public class RuleFire {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panel.setBounds(10, 11, 430, 46);
+		panel.setBounds(10, 11, 430, 33);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -49,12 +53,24 @@ public class RuleFire {
 		lblNewLabel.setBounds(10, 5, 410, 22);
 		panel.add(lblNewLabel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		model = new DefaultListModel<String>();
-		for (int i = 0; i < rule.getDevicesName().size(); i++)
-			model.addElement((rule.getDevicesName().get(i)));
+
+		final JPanel scriptArea = new JPanel();
+		scriptArea.setBounds(10, 55, 298, 179);
+		scriptArea.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		scriptArea.setBackground(SystemColor.menu);
+		scriptArea.setForeground(Color.BLACK);
+		frame.getContentPane().add(scriptArea);
+		scriptArea.setLayout(new BorderLayout(0, 0));
+		JScrollPane scS = new JScrollPane();
+		scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scriptArea.add(scS);
+		scriptTextArea = new JTextArea(20, 20);
+		scS.setViewportView(scriptTextArea);
+		scriptTextArea.setText(writeRuleToTextArea(rule));
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(10, 69, 430, 126);
+		panel_3.setBounds(318, 55, 122, 140);
 		panel_3.setLayout(new BorderLayout(0, 0));
 		ruleScripts = DatabaseLogic.getRuleScripts(rule.getID());
 		model2 = new DefaultListModel<Script>();
@@ -71,13 +87,32 @@ public class RuleFire {
 			public void actionPerformed(ActionEvent e) {
 				if (list2.getSelectedIndex() != -1) {
 					int[] scripts = list2.getSelectedIndices();
-					for (int j : scripts) {
+					for (int j : scripts)
 						ScriptRunner.runScript((Script) model2.getElementAt(j));
-					}
 				}
 			}
 		});
 		btnRunScripts.setBounds(318, 200, 122, 23);
 		frame.getContentPane().add(btnRunScripts);
+	}
+
+	public static String writeRuleToTextArea(Rule rule) {
+		String text = "";
+		for (int i = 0; i < rule.getDevicesName().size(); i++) {
+			text += rule.getDevicesName().get(i);
+			text += "\n";
+			text += (rule.getInterfacesName().get(i));
+			text += "\n";
+			for (int j = 0; j < rule.getDataSourceName().get(i).size(); j++) {
+				text += (rule.getDataSourceName().get(i).get(j));
+				text += "\t";
+				text += ("Min: " + rule.getMinValue().get(i).get(j) + ", Max: " + rule
+						.getMaxValue().get(i).get(j));
+				text += "\n";
+			}
+			if (i != rule.getDevicesName().size() - 1)
+				text += "\n&\n";
+		}
+		return text;
 	}
 }

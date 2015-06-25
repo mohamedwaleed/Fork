@@ -98,7 +98,7 @@ public class MainWindow {
 		MainWindow.password = auth[1];
 	}
 
-	protected boolean showMySqlAuth() {
+	public boolean showMySqlAuth() {
 		JTextField username = new JTextField();
 		username.requestFocusInWindow();
 		JPasswordField password = new JPasswordField();

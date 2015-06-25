@@ -155,7 +155,8 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					if (result == JOptionPane.OK_OPTION) {
 
 						DatabaseLogic.deleteRuleScripts(ruleToUpdate.getID());
-						DefaultListModel<Script> scriptsModel = djp.getNewModel();
+						DefaultListModel<Script> scriptsModel = djp
+								.getNewModel();
 
 						List<Script> pickedScripts = new ArrayList<Script>();
 						for (int i = 0; i < scriptsModel.size(); i++)
@@ -198,11 +199,12 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 	}
 
 	public void valueChanged(ListSelectionEvent arg0) {
+
 		if (list.getSelectedIndex() != -1) {
 			textField_1.setText(((Rule) model.getElementAt(list
 					.getSelectedIndex())).getName());
-			RuleTextArea.setText(((Rule) model.getElementAt(list
-					.getSelectedIndex())).getRule());
+			RuleTextArea.setText(RuleFire.writeRuleToTextArea((Rule) model
+					.getElementAt(list.getSelectedIndex())));
 			int ret = ((Rule) model.getElementAt(list.getSelectedIndex()))
 					.getState();
 			boolean ac = false;
