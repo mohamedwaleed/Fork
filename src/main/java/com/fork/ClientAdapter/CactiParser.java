@@ -2,6 +2,7 @@ package com.fork.ClientAdapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -73,7 +74,16 @@ public class CactiParser implements IDataParser {
 		String data = commandResult.getOutput();
 		InterfaceData interfaceData = new InterfaceData();
 		Scanner in = new Scanner(data);
-		String[] dataSources = in.nextLine().split(" ");
+		String dataLine = in.nextLine() + " ", temp = "";
+		List<String> dataSources = new ArrayList<String>();
+		for (int i = 0; i < dataLine.length(); ++i) {
+			if (dataLine.charAt(i) == ' ') {
+				if (!temp.isEmpty())
+					dataSources.add(temp);
+				temp = "";
+			} else
+				temp += dataLine.charAt(i);
+		}
 		in.nextLine();
 		String line = "";
 		while (in.hasNextLine()) {
@@ -88,7 +98,7 @@ public class CactiParser implements IDataParser {
 				value = Double.valueOf(dataRow[i]);
 			DataSource newDataSource = new DataSource();
 			newDataSource.setID(String.valueOf(ID));
-			newDataSource.setDataSourceName(dataSources[i]);
+			newDataSource.setDataSourceName(dataSources.get(i));
 			newDataSource.setDataSourceValue(value);
 			interfaceData.addDataSource(newDataSource);
 			++ID;

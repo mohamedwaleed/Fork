@@ -5,11 +5,10 @@ import java.util.Timer;
 public class ForkBackgroundProcess extends Thread {
 	private Thread t;
 	private String threadName;
-	private int interval;
+	private final int INTERVAL = 300000;
 
 	public ForkBackgroundProcess(String name) {
 		threadName = name;
-		interval = 30000;
 		System.out.println("Creating " + threadName);
 	}
 
@@ -18,7 +17,7 @@ public class ForkBackgroundProcess extends Thread {
 
 		Timer timer = new Timer();
 		ForkRuntime forkRuntime = new ForkRuntime();
-		timer.schedule(forkRuntime, 0, interval);
+		timer.schedule(forkRuntime, 0, INTERVAL);
 
 		System.out.println("Thread " + threadName + " exiting.");
 	}
