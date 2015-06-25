@@ -13,15 +13,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.fork.domain.Script;
-import com.fork.persistance.sqlite.DatabaseLogic;
+import com.fork.outputController.DatabaseLogic;
 
+@SuppressWarnings("serial")
 public class DialogJPanel extends JPanel {
 
 	private JTextField textField;
-	private JList list;
+	private JList<Script> list;
 	private List<Script> scriptsNames;
-	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
+	private DefaultListModel<Script> model;
 
 	/**
 	 * Create the panel.
@@ -59,7 +59,7 @@ public class DialogJPanel extends JPanel {
 		scS.setViewportView(scriptTextArea);
 
 		scriptsNames = DatabaseLogic.getScripts();
-		model = new DefaultListModel();
+		model = new DefaultListModel<Script>();
 		for (int i = 0; i < scriptsNames.size(); i++)
 			model.addElement(((Script) scriptsNames.get(i)));
 
@@ -67,14 +67,14 @@ public class DialogJPanel extends JPanel {
 		panel.setBounds(81, 171, 147, 118);
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
-		list = new JList(model);
+		list = new JList<Script>(model);
 		JScrollPane jScrollPane1 = new JScrollPane(list);
 		panel.add(jScrollPane1);
 		jScrollPane1.setMaximumSize(new Dimension(100, 200));
 
 	}
 
-	public JList getChoosenScripts() {
+	public JList<Script> getChoosenScripts() {
 		return list;
 	}
 
@@ -82,7 +82,7 @@ public class DialogJPanel extends JPanel {
 		return textField.getText().toString();
 	}
 
-	public DefaultListModel getModel() {
+	public DefaultListModel<Script> getModel() {
 		return model;
 	}
 }

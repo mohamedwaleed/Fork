@@ -3,7 +3,9 @@ package com.fork.persistance.rdf;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fork.domain.DataSource;
 import com.fork.domain.Device;
+import com.fork.domain.DeviceType;
 import com.fork.domain.Interface;
 import com.fork.domain.InterfaceData;
 import com.fork.domain.Router;
@@ -18,7 +20,8 @@ public class ParseResultSet {
 		while (result.hasNext()) {
 			QuerySolution row = result.nextSolution();
 			Zone zone = new Zone();
-			zone.setName(row.get("zoneName").toString().split("#")[1]);
+			zone.setZoneID(row.get("zoneID").toString());
+			zone.setName(row.get("zoneName").toString());
 			zones.add(zone);
 		}
 		return zones;
@@ -46,18 +49,41 @@ public class ParseResultSet {
 		List<Interface> interfaces = new ArrayList<Interface>();
 		while (result.hasNext()) {
 			QuerySolution row = result.nextSolution();
-			String interfaceID = row.get("interface").toString().split("#")[1];
+			String interfaceID = row.get("interfaceID").toString();
 			String interfaceName = row.get("interfaceName").toString();
 			Interface intrface = new Interface();
-			intrface.setInterfaceID(interfaceID);
-			intrface.setInterfaceName(interfaceName);
-			InterfaceData interfaceData = new InterfaceData();
-			interfaceData.setTime(row.getLiteral("time").getLong());
-			interfaceData.setInBound(row.getLiteral("trafficIn").getDouble());
-			interfaceData.setOutBound(row.getLiteral("trafficOut").getDouble());
-			intrface.setInterfaceData(interfaceData);
+			intrface.setID(interfaceID);
+			intrface.setName(interfaceName);
 			interfaces.add(intrface);
 		}
 		return interfaces;
+	}
+
+	public InterfaceData getInterfaceData(ResultSet result) {
+		InterfaceData interfaceData = new InterfaceData();
+		while (result.hasNext()) {
+			QuerySolution row = result.nextSolution();
+			String ID = row.get("interfaceID").toString() + "_Data";
+			interfaceData.setID(ID);
+		}
+		return interfaceData;
+	}
+
+	public List<DataSource> getDataSources(ResultSet result) {
+		List<DataSource> dataSources = new ArrayList<DataSource>();
+		while (result.hasNext()) {
+			QuerySolution row = result.nextSolution();
+			String ID = row.get("dataSourceID").toString();
+			String name = row.get("dataSourceName").toString();
+			double value = row.getLiteral("dataSourceValue").getDouble();
+
+			DataSource dataSource = new DataSource();
+			dataSource.setID(ID);
+			dataSource.setDataSourceName(name);
+			dataSource.setDataSourceValue(value);
+
+			dataSources.add(0, dataSource);
+		}
+		return dataSources;
 	}
 }

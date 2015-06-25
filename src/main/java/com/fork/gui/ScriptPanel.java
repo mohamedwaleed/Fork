@@ -3,44 +3,38 @@ package com.fork.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Script;
-import com.fork.persistance.sqlite.DatabaseLogic;
-import javax.swing.SwingConstants;
+import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.ScriptRunner;
 
 @SuppressWarnings("serial")
-public class ScriptPanel extends JPanel implements ListSelectionListener {
-	private JTextField textField_1;
-	@SuppressWarnings("rawtypes")
-	private JList list;
+public class ScriptPanel extends JPanel {
+	private JList<Script> list;
 	private List<Script> scriptsNames;
-	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
+	private DefaultListModel<Script> model;
 	private JScrollPane jScrollPane1;
 	
-	private JTextArea scriptTextArea;
-
 	/**
 	 * Create the panel.
 	 */
@@ -49,39 +43,9 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 	public ScriptPanel() {
 		setLayout(null);
 
-		final JPanel scriptArea = new JPanel();
-		scriptArea.setBounds(165, 45, 462, 240);
-		scriptArea.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		scriptArea.setBackground(SystemColor.menu);
-		scriptArea.setForeground(Color.BLACK);
-		add(scriptArea);
-		scriptArea.setLayout(null);
-
-		JLabel lblNewLabel_2 = new JLabel("Name");
-		lblNewLabel_2.setBounds(10, 11, 68, 14);
-		scriptArea.add(lblNewLabel_2);
-
-		JLabel lblNewLabel_3 = new JLabel("Script");
-		lblNewLabel_3.setBounds(10, 40, 68, 14);
-		scriptArea.add(lblNewLabel_3);
-
-		textField_1 = new JTextField();
-		textField_1.setBackground(SystemColor.window);
-		textField_1.setBounds(88, 8, 355, 20);
-		scriptArea.add(textField_1);
-		textField_1.setColumns(10);
-		JScrollPane scS = new JScrollPane();
-		scS.setSize(365, 189);
-		scS.setLocation(88, 40);
-		scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scriptArea.add(scS);
-
-		scriptTextArea = new JTextArea(20, 20);
-		scS.setViewportView(scriptTextArea);
 
 		JPanel liftList1 = new JPanel();
-		liftList1.setBounds(10, 69, 145, 216);
+		liftList1.setBounds(10, 69, 620, 216);
 		liftList1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList1.setLayout(new BorderLayout(0, 0));
 		add(liftList1);
@@ -91,7 +55,6 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		for (int i = 0; i < scriptsNames.size(); i++)
 			model.addElement(((Script) scriptsNames.get(i)));
 		list = new JList(model);
-		list.addListSelectionListener(this);
 		jScrollPane1 = new JScrollPane(list);
 		jScrollPane1.setMaximumSize(new Dimension(100, 200));
 		liftList1.add(jScrollPane1, BorderLayout.CENTER);
@@ -100,21 +63,7 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		panel_s.setBounds(10, 285, 618, 33);
 		add(panel_s);
 
-		JButton update = new JButton("Update");
-		update.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int row = list.getSelectedIndex();
-				DatabaseLogic.updateScript(((Script) model.getElementAt(row))
-						.getId(), textField_1.getText().toString(),
-						scriptTextArea.getText().toString());
-				Script newS = new Script();
-				newS.setId(((Script) model.getElementAt(row)).getId());
-				newS.setName(textField_1.getText().toString());
-				newS.setScript(scriptTextArea.getText().toString());
-				model.setElementAt(newS, row);
-			}
-		});
-		panel_s.add(update);
+		
 		JButton remove = new JButton("Remove");
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -146,49 +95,51 @@ public class ScriptPanel extends JPanel implements ListSelectionListener {
 		add(btnNewButton_2);
 		
 		JLabel lblListOfScripts = new JLabel("List of scripts");
-		lblListOfScripts.setHorizontalAlignment(SwingConstants.CENTER);
+		lblListOfScripts.setHorizontalAlignment(SwingConstants.LEFT);
 		lblListOfScripts.setBounds(10, 45, 145, 14);
 		add(lblListOfScripts);
 	}
 
-	static class ScriptAddition extends JPanel {
+	static class ScriptAddition{
+		static String name ;
 		public static void start() {
-			JPanel myPanel = new JPanel();
+			final JPanel myPanel = new JPanel();
 			myPanel.setBounds(100, 100, 100, 100);
 			myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-			JTextField scriptName = new JTextField();
-			myPanel.add(new JLabel("Script Name"));
-			myPanel.add(scriptName);
-			myPanel.add(new JLabel("Script"));
+			final JTextField path = new JTextField();
+			path.setEditable(false);
 
-			JScrollPane scS = new JScrollPane();
-			scS.setSize(365, 144);
-			scS.setLocation(151, 40);
-			scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-			scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			JTextArea script = new JTextArea(20, 20);
-			scS.setViewportView(script);
-			myPanel.add(scS);
+			
+			
+			JButton browse = new JButton("Browse ...");
+			browse.setBounds(0, 0, 627, 33);
+			browse.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					JFileChooser fc = new JFileChooser();
+					fc.setAcceptAllFileFilterUsed(false);
+					fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					int returnVal = fc.showOpenDialog(myPanel);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						String filePath = file.getAbsolutePath();
+						name = file.getName();
+						path.setText(filePath);
+					}
+				}
+			});
+			myPanel.add(browse);
+			myPanel.add(path);
+			
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Add Script", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				DatabaseLogic.addScript(scriptName.getText().toString(), script
-						.getText().toString());
-			}
-		}
-	}
-
-	public void valueChanged(ListSelectionEvent evt) {
-		if (!evt.getValueIsAdjusting()) {
-			if (list.getSelectedIndex() != -1) {
-				System.out.println("here");
-				textField_1.setText(((Script) model.getElementAt(list
-						.getSelectedIndex())).getName());
-				scriptTextArea.setText(((Script) model.getElementAt(list
-						.getSelectedIndex())).getScript());
-			} else {
-				textField_1.setText("");
-				scriptTextArea.setText("");
+				try {
+					ScriptRunner.copy(path.getText().toString(), name);
+					DatabaseLogic.addScript(name);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

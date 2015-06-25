@@ -15,7 +15,7 @@ public class Main {
 		MainWindow window = new MainWindow();
 		window.frame.setVisible(true);
 
-		initializeCoreThread();
+		initializeCoreThread();	
 	}
 
 	private static void initializeCoreThread() {

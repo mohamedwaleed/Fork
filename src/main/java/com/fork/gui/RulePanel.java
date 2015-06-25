@@ -28,16 +28,15 @@ import javax.swing.event.ListSelectionListener;
 
 import com.fork.domain.Rule;
 import com.fork.domain.Script;
-import com.fork.persistance.sqlite.DatabaseLogic;
+import com.fork.outputController.DatabaseLogic;
 
+@SuppressWarnings("serial")
 public class RulePanel extends JPanel implements ListSelectionListener {
 	private JTextField textField_1;
-	@SuppressWarnings("rawtypes")
-	private JList list;
+	private JList<Rule> list;
 	private JScrollPane jScrollPane1;
 	private List<Rule> RulesNames;
-	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
+	private DefaultListModel<Rule> model;
 	private JCheckBox chckbxActivated;
 	private JTextArea RuleTextArea;
 	private RuleAddition ruleAddition;
@@ -92,7 +91,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					else
 						ret = 0;
 					DatabaseLogic.changeRuleState(((Rule) model
-							.getElementAt(list.getSelectedIndex())).getId(),
+							.getElementAt(list.getSelectedIndex())).getID(),
 							ret);
 					((Rule) model.elementAt(list.getSelectedIndex()))
 							.setState(ret);
@@ -109,10 +108,10 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		add(liftList1);
 
 		RulesNames = DatabaseLogic.getRules();
-		model = new DefaultListModel();
+		model = new DefaultListModel<Rule>();
 		for (int i = 0; i < RulesNames.size(); i++)
 			model.addElement(((Rule) RulesNames.get(i)));
-		list = new JList(model);
+		list = new JList<Rule>(model);
 		list.addListSelectionListener(this);
 		jScrollPane1 = new JScrollPane(list);
 		jScrollPane1.setMaximumSize(new Dimension(100, 200));
@@ -132,7 +131,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					for (int i = rows.length - 1; i >= 0; i--) {
 						Rule Rule = (Rule) model.getElementAt(rows[i]);
 						model.removeElement(Rule);
-						ids.add(Rule.getId());
+						ids.add(Rule.getID());
 					}
 					DatabaseLogic.deleteRules(ids);
 				}
@@ -155,8 +154,8 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 
-						DatabaseLogic.deleteRuleScripts(ruleToUpdate.getId());
-						DefaultListModel scriptsModel = djp.getNewModel();
+						DatabaseLogic.deleteRuleScripts(ruleToUpdate.getID());
+						DefaultListModel<Script> scriptsModel = djp.getNewModel();
 
 						List<Script> pickedScripts = new ArrayList<Script>();
 						for (int i = 0; i < scriptsModel.size(); i++)
@@ -164,7 +163,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 									.getElementAt(i)));
 
 						DatabaseLogic.addRuleScripts(pickedScripts,
-								ruleToUpdate.getId());
+								ruleToUpdate.getID());
 					}
 				}
 
@@ -192,7 +191,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 	public void updateList() {
 		System.out.println("Here update List");
 		RulesNames = DatabaseLogic.getRules();
-		model = new DefaultListModel();
+		model = new DefaultListModel<Rule>();
 		for (int i = 0; i < RulesNames.size(); i++)
 			model.addElement(((Rule) RulesNames.get(i)));
 		list.setModel(model);

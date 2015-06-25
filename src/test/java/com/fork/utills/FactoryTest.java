@@ -1,10 +1,6 @@
 package com.fork.utills;
 
-import java.util.List;
 import org.junit.Test;
-import com.fork.ClientAdapter.ICactiRrd;
-import com.fork.domain.Device;
-import static org.junit.Assert.*;
 
 public class FactoryTest {
 

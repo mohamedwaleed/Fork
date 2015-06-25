@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Rule extends Object {
-	private int id;
+	private int ID;
 	private int state;
 	private String name;
 	private String rule;
 	private List<String> devicesName, interfacesName;
-	private List<String> inMn, inMx, outMn, outMx;
+	private List<List<String>> dataSourceName, minValue, maxValue;
 
 	public Rule() {
 	}
@@ -22,12 +22,12 @@ public class Rule extends Object {
 		this.state = state;
 	}
 
-	public int getId() {
-		return id;
+	public int getID() {
+		return ID;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setID(int ID) {
+		this.ID = ID;
 	}
 
 	public String getName() {
@@ -50,19 +50,25 @@ public class Rule extends Object {
 	private void splitRule() {
 		devicesName = new ArrayList<String>();
 		interfacesName = new ArrayList<String>();
-		inMn = new ArrayList<String>();
-		inMx = new ArrayList<String>();
-		outMn = new ArrayList<String>();
-		outMx = new ArrayList<String>();
+		setDataSourceName(new ArrayList<List<String>>());
+		minValue = new ArrayList<List<String>>();
+		maxValue = new ArrayList<List<String>>();
 		String[] condations = this.rule.split("&");
 		for (int i = 0; i < condations.length; ++i) {
 			String[] parts = condations[i].split("#");
 			devicesName.add(parts[0]);
 			interfacesName.add(parts[1]);
-			inMn.add(parts[2]);
-			inMx.add(parts[3]);
-			outMn.add(parts[4]);
-			outMx.add(parts[5]);
+			List<String> curDataSourceName = new ArrayList<String>();
+			List<String> curMinValue = new ArrayList<String>();
+			List<String> curMaxValue = new ArrayList<String>();
+			for (int j = 2; j < parts.length; j += 3) {
+				curDataSourceName.add(parts[j]);
+				curMinValue.add(parts[j + 1]);
+				curMaxValue.add(parts[j + 2]);
+			}
+			dataSourceName.add(curDataSourceName);
+			minValue.add(curMinValue);
+			maxValue.add(curMaxValue);
 		}
 	}
 
@@ -73,7 +79,7 @@ public class Rule extends Object {
 
 	@Override
 	public boolean equals(Object s) {
-		if (id == ((Rule) s).getId())
+		if (ID == ((Rule) s).getID())
 			return true;
 		else
 			return false;
@@ -95,35 +101,27 @@ public class Rule extends Object {
 		this.interfacesName = interfacesName;
 	}
 
-	public List<String> getInMn() {
-		return inMn;
+	public List<List<String>> getMinValue() {
+		return minValue;
 	}
 
-	public void setInMn(List<String> inMn) {
-		this.inMn = inMn;
+	public void setMinValue(List<List<String>> minValue) {
+		this.minValue = minValue;
 	}
 
-	public List<String> getInMx() {
-		return inMx;
+	public List<List<String>> getMaxValue() {
+		return maxValue;
 	}
 
-	public void setInMx(List<String> inMx) {
-		this.inMx = inMx;
+	public void setMaxValue(List<List<String>> maxValue) {
+		this.maxValue = maxValue;
 	}
 
-	public List<String> getOutMn() {
-		return outMn;
+	public List<List<String>> getDataSourceName() {
+		return dataSourceName;
 	}
 
-	public void setOutMn(List<String> outMn) {
-		this.outMn = outMn;
-	}
-
-	public List<String> getOutMx() {
-		return outMx;
-	}
-
-	public void setOutMx(List<String> outMx) {
-		this.outMx = outMx;
+	public void setDataSourceName(List<List<String>> dataSourceName) {
+		this.dataSourceName = dataSourceName;
 	}
 }

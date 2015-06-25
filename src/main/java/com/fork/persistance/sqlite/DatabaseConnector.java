@@ -31,8 +31,7 @@ public class DatabaseConnector {
 					stmt = con.createStatement();
 					String scriptTable = "CREATE TABLE Script "
 							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
-							+ " NAME           TEXT    NOT NULL, "
-							+ " SCRIPT         TEXT    NOT NULL)";
+							+ " NAME           TEXT    NOT NULL) ";
 					stmt.executeUpdate(scriptTable);
 
 					String ruleTable = "CREATE TABLE Rule "
@@ -47,6 +46,15 @@ public class DatabaseConnector {
 							+ " SCRIPT_ID           INT    NOT NULL, "
 							+ " RULE_ID         INT      NOT NULL)";
 					stmt.executeUpdate(ruleScript);
+
+					String auth = "CREATE TABLE Auth "
+							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
+							+ " USERNAME           TEXT    NOT NULL, "
+							+ " PASSWORD           TEXT      NOT NULL)";
+					stmt.executeUpdate(auth);
+
+					String q = "INSERT into Auth (USERNAME, PASSWORD) values ('d','d')";
+					stmt.executeUpdate(q);
 
 					stmt.close();
 					con.close();

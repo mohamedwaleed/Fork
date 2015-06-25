@@ -5,8 +5,9 @@ import java.util.TimerTask;
 
 import com.fork.core.CoreRuntime;
 import com.fork.domain.Rule;
+import com.fork.gui.MainWindow;
 import com.fork.gui.ZonePanel;
-import com.fork.persistance.sqlite.DatabaseLogic;
+import com.fork.outputController.DatabaseLogic;
 
 public class ForkRuntime extends TimerTask {
 
@@ -18,13 +19,15 @@ public class ForkRuntime extends TimerTask {
 		// create an abject of ForkLifecycle
 		// call functions stack
 		
-		IForkLifecycle appLifecycle  = new ForkLifecycle();
-		appLifecycle.updateDevicesData();
-		
-		ZonePanel.updateList();
-		
-		List<Rule> rules = DatabaseLogic.getRules();
-		CoreRuntime.testRules(rules);
-		
+		IForkLifecycle appLifecycle = new ForkLifecycle();
+		if (appLifecycle.updateDevicesData() != null) {
+			ZonePanel.updateList();
+
+			List<Rule> rules = DatabaseLogic.getActiveRules();
+			CoreRuntime.testRules(rules);
+		} else {
+			MainWindow.showWrongMysqlAuth();
+		}
+
 	}
 }

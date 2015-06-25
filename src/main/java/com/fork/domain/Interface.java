@@ -1,48 +1,44 @@
 package com.fork.domain;
 
 public class Interface extends Object {
-	private String interfaceID;
-	private String interfaceName;
-	private InterfaceData interfaceData;
+	private String ID;
+	private String name;
+	private InterfaceData data;
 
-	public String getInterfaceName() {
-		return interfaceName;
+	public String getID() {
+		return ID;
 	}
 
-	public void setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
+	public void setID(String ID) {
+		this.ID = ID;
 	}
 
-	public InterfaceData getInterfaceData() {
-		return interfaceData;
+	public String getName() {
+		return name;
 	}
 
-	public void setInterfaceData(InterfaceData interfaceData) {
-		this.interfaceData = interfaceData;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Interface() {
+	public InterfaceData getData() {
+		return data;
+	}
+
+	public void setData(InterfaceData data) {
+		this.data = data;
 	}
 
 	@Override
 	public String toString() {
-		return interfaceName;
+		return name;
 	}
 
 	@Override
 	public boolean equals(Object s) {
-		if (interfaceName.equals(((Interface) s).getInterfaceName()))
+		if (name.equals(((Interface) s).getName()))
 			return true;
 		else
 			return false;
 	}
-
-	public String getInterfaceID() {
-		return interfaceID;
-	}
-
-	public void setInterfaceID(String intrefaceID) {
-		this.interfaceID = intrefaceID;
-	}
-
 }

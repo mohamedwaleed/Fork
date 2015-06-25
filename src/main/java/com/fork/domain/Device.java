@@ -3,18 +3,10 @@ package com.fork.domain;
 import java.util.List;
 
 public class Device extends Object {
-	private String IP;
 	private String ID;
+	private String IP;
 	private String hostName;
 	private List<Interface> interfaces;
-
-	public void setIP(String IP) {
-		this.IP = IP;
-	}
-
-	public String getIP() {
-		return IP;
-	}
 
 	public void setID(String ID) {
 		this.ID = ID;
@@ -22,6 +14,14 @@ public class Device extends Object {
 
 	public String getID() {
 		return ID;
+	}
+
+	public void setIP(String IP) {
+		this.IP = IP;
+	}
+
+	public String getIP() {
+		return IP;
 	}
 
 	public void setHostName(String hostName) {

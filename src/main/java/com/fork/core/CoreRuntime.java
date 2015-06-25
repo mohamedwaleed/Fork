@@ -4,16 +4,18 @@ import java.util.List;
 
 import com.fork.domain.Rule;
 import com.fork.gui.RuleFire;
-import com.fork.persistance.rdf.JenaRetrieval;
+import com.fork.outputController.RDFLogic;
 
 public class CoreRuntime {
 
 	public static void testRules(List<Rule> rules) {
-		JenaRetrieval jenaRetrieval = new JenaRetrieval();
+		RDFLogic rDFLogic = new RDFLogic();
 		for (Rule rule : rules) {
-			if (jenaRetrieval.fireRule(rule))
+			if (rDFLogic.fireRule(rule)) {
 				new RuleFire(rule);
+				RuleFire window = new RuleFire(rule);
+				window.frame.setVisible(true);
+			}
 		}
 	}
-
 }

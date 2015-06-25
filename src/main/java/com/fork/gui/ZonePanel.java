@@ -23,7 +23,7 @@ import javax.swing.border.LineBorder;
 
 import com.fork.domain.Device;
 import com.fork.domain.Zone;
-import com.fork.persistance.rdf.JenaRetrieval;
+import com.fork.outputController.RDFLogic;
 
 @SuppressWarnings("serial")
 public class ZonePanel extends JPanel {
@@ -31,18 +31,17 @@ public class ZonePanel extends JPanel {
 
 	private static List<Device> devices;
 	private List<Device> choosenDevices;
-	@SuppressWarnings("rawtypes")
-	private static DefaultListModel model;
-	private static JList list;
+	private static DefaultListModel<Device> model;
+	private static JList<Device> list;
 	private ZoneArea zoneArea;
-	private static JenaRetrieval jenaRetrieval;
+	private static RDFLogic rDFLogic;
 
 	/**
 	 * Create the panel.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ZonePanel() {
-		jenaRetrieval = new JenaRetrieval();
+		rDFLogic = new RDFLogic();
 
 		setLayout(null);
 
@@ -104,11 +103,20 @@ public class ZonePanel extends JPanel {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!textField.getText().toString().isEmpty()) {
+					List<Zone> zones = rDFLogic.getZones();
+					int mx = -1;
+					for (Zone curZone : zones)
+						mx = Math.max(mx, Integer.valueOf(curZone.getZoneID()));
 					Zone zone = new Zone();
 					zone.setName(textField.getText().toString());
-					jenaRetrieval.addZone(zone);
+					zone.setZoneID(String.valueOf(mx + 1));
+					rDFLogic.addZone(zone);
 					for (Device device : choosenDevices)
-						jenaRetrieval.addZoneDeviceRelation(zone, device);
+						rDFLogic.addZoneDeviceRelation(zone, device);
+					zoneArea.removeAllComponents();
+					JOptionPane.showMessageDialog(ZonePanel.this,
+							"Zone "+textField.getText().toString()+" has been created", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 
 			}
@@ -130,9 +138,9 @@ public class ZonePanel extends JPanel {
 					DefaultListModel zonesModel = djp.getModel();
 					int picked[] = choosenZones.getSelectedIndices();
 					for (int i : picked) {
-						jenaRetrieval.deleteZone((Zone) (zonesModel
+						rDFLogic.deleteZone((Zone) (zonesModel
 								.getElementAt(i)));
-						jenaRetrieval.deleteAllZoneRelations((Zone) (zonesModel
+						rDFLogic.deleteAllZoneRelations((Zone) (zonesModel
 								.getElementAt(i)));
 						updateList();
 					}
@@ -151,8 +159,8 @@ public class ZonePanel extends JPanel {
 	}
 
 	public static void updateList() {
-		devices = jenaRetrieval.getFreeDevices();
-		model = new DefaultListModel();
+		devices = rDFLogic.getFreeDevices();
+		model = new DefaultListModel<Device>();
 		for (int i = 0; i < devices.size(); i++)
 			model.addElement(((Device) devices.get(i)));
 		list.setModel(model);

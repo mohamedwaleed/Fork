@@ -55,6 +55,12 @@
         <rdfs:range rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
     </owl:ObjectProperty>
     
+    <!-- http://www.semanticweb.org/Fork#hasDataSource -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/Fork#hasDataSource">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/Fork#DataSource"/>
+    </owl:ObjectProperty>
 
 
     <!-- 
@@ -92,43 +98,45 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Device"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
-    
 
+    <!-- http://www.semanticweb.org/Fork#dataSourceID -->
 
-    <!-- http://www.semanticweb.org/Fork#time -->
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#dataSourceID">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#DataSource"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#time">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
-        <rdfs:range rdf:resource="&xsd;long"/>
+	
+    <!-- http://www.semanticweb.org/Fork#dataSourceName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#dataSourceName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#DataSource"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/Fork#traffic_in -->
+    <!-- http://www.semanticweb.org/Fork#dataSourceValue -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#traffic_in">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#dataSourceValue">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#DataSource"/>
         <rdfs:range rdf:resource="&xsd;double"/>
     </owl:DatatypeProperty>
     
-
-
-    <!-- http://www.semanticweb.org/Fork#traffic_out -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#traffic_out">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#InterfaceData"/>
-        <rdfs:range rdf:resource="&xsd;double"/>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/Fork#zoneName -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#zoneName">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
-    
+
+    <!-- http://www.semanticweb.org/Fork#zoneID -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#zoneID">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+	
     <!-- http://www.semanticweb.org/Fork#interfaceName -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#interfaceName">
@@ -136,6 +144,12 @@
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
 
+    <!-- http://www.semanticweb.org/Fork#interfaceID -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/Fork#interfaceID">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/Fork#Interface"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
 
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -170,6 +184,11 @@
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
     </owl:Class>
     
+    <!-- http://www.semanticweb.org/Fork#DataSource -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/Fork#DataSource">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/Fork#Zone"/>
+    </owl:Class>
 
 
     <!-- http://www.semanticweb.org/Fork#Router -->

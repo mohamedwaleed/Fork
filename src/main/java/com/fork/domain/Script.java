@@ -3,7 +3,6 @@ package com.fork.domain;
 public class Script extends Object {
 	private int id;
 	private String name;
-	private String script;
 
 	public Script() {
 	}
@@ -22,14 +21,6 @@ public class Script extends Object {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getScript() {
-		return script;
-	}
-
-	public void setScript(String script) {
-		this.script = script;
 	}
 
 	@Override

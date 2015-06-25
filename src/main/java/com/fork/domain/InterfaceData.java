@@ -1,41 +1,33 @@
 package com.fork.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InterfaceData {
-	private long time;
-	private double inBound, outBound;
-
-	public long getTime() {
-		return time;
-	}
-
-	public void setTime(long time) {
-		this.time = time;
-	}
-
-	public double getInBound() {
-		return inBound;
-	}
-
-	public void setInBound(double inBound) {
-		this.inBound = inBound;
-	}
-
-	public double getOutBound() {
-		return outBound;
-	}
-
-	public void setOutBound(double outBound) {
-		this.outBound = outBound;
-	}
+	private String ID;
+	private List<DataSource> dataSources;
 
 	public InterfaceData() {
+		setDataSources(new ArrayList<DataSource>());
 	}
 
-	public InterfaceData(long time, double inBound, double outBound) {
-		super();
-		this.time = time;
-		this.inBound = inBound;
-		this.outBound = outBound;
+	public String getID() {
+		return ID;
 	}
 
+	public void setID(String ID) {
+		this.ID = ID;
+	}
+
+	public List<DataSource> getDataSources() {
+		return dataSources;
+	}
+
+	public void setDataSources(List<DataSource> dataSources) {
+		this.dataSources = dataSources;
+	}
+
+	public void addDataSource(DataSource dataSource) {
+		this.dataSources.add(dataSource);
+	}
 }

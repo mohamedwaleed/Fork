@@ -1,4 +1,4 @@
-package com.fork.persistance.rdf;
+package com.fork.domain;
 
 public enum DeviceType {
 	Router, Switch

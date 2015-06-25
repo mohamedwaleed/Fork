@@ -9,7 +9,7 @@ public class ForkBackgroundProcess extends Thread {
 
 	public ForkBackgroundProcess(String name) {
 		threadName = name;
-		interval = 60000;
+		interval = 30000;
 		System.out.println("Creating " + threadName);
 	}
 

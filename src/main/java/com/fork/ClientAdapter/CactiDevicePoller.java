@@ -9,9 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fork.domain.Device;
-import com.fork.domain.Switch;
 
 public class CactiDevicePoller implements IDevicePoller {
+	private String userName, passWord;
+
+	public CactiDevicePoller(String userName, String passWord) {
+		this.userName = userName;
+		this.passWord = passWord;
+	}
 
 	/**
 	 * Method for get devices data from Cacti sql database
@@ -24,12 +29,10 @@ public class CactiDevicePoller implements IDevicePoller {
 		List<Device> devices = new ArrayList<Device>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-
 			Connection con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/cacti", "cacti", "12345");
+					"jdbc:mysql://localhost:3306/cacti", userName, passWord);
 			Statement stmt = con.createStatement();
 			ResultSet resultSet = stmt.executeQuery("select * from host");
-
 			while (resultSet.next()) {
 				Device device = new Device();
 				device.setID(String.valueOf(resultSet.getInt("id")));
@@ -40,11 +43,12 @@ public class CactiDevicePoller implements IDevicePoller {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-
 		return devices;
 	}
 }

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,17 +16,17 @@ import javax.swing.JScrollPane;
 
 import com.fork.domain.Rule;
 import com.fork.domain.Script;
-import com.fork.persistance.sqlite.DatabaseLogic;
+import com.fork.outputController.DatabaseLogic;
 
+@SuppressWarnings("serial")
 public class EditRuleJPanel extends JPanel {
 
-	private JList list;
-	private JList list2;
+	private JList<Script> list;
+	private JList<Script> list2;
 	private List<Script> scriptsNames;
 	private List<Script> ruleScriptsNames;
-	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
-	private DefaultListModel model2;
+	private DefaultListModel<Script> model;
+	private DefaultListModel<Script> model2;
 
 	/**
 	 * Create the panel.
@@ -39,26 +38,26 @@ public class EditRuleJPanel extends JPanel {
 		lblScripts.setBounds(10, 11, 146, 20);
 		add(lblScripts);
 
-		scriptsNames = DatabaseLogic.getScripts();
-		model = new DefaultListModel();
-		for (int i = 0; i < scriptsNames.size(); i++)
-			model.addElement(((Script) scriptsNames.get(i)));
-
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 42, 146, 247);
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
-		list = new JList(model);
+		scriptsNames = DatabaseLogic.getScripts();
+		model = new DefaultListModel<Script>();
+		for (int i = 0; i < scriptsNames.size(); i++)
+			model.addElement(((Script) scriptsNames.get(i)));
+
+		list = new JList<Script>(model);
 		JScrollPane jScrollPane1 = new JScrollPane(list);
-		panel.add(jScrollPane1);
 		jScrollPane1.setMaximumSize(new Dimension(100, 200));
+		panel.add(jScrollPane1);
 
 		JLabel lblRuleScripts = new JLabel("Rule Scripts");
 		lblRuleScripts.setBounds(245, 11, 69, 20);
 		add(lblRuleScripts);
 
-		ruleScriptsNames = DatabaseLogic.getRuleScripts(rule.getId());
-		model2 = new DefaultListModel();
+		ruleScriptsNames = DatabaseLogic.getRuleScripts(rule.getID());
+		model2 = new DefaultListModel<Script>();
 		for (int i = 0; i < ruleScriptsNames.size(); i++)
 			model2.addElement(((Script) ruleScriptsNames.get(i)));
 
@@ -66,7 +65,7 @@ public class EditRuleJPanel extends JPanel {
 		panel1.setBounds(245, 40, 161, 249);
 		add(panel1);
 		panel1.setLayout(new BorderLayout(0, 0));
-		list2 = new JList(model2);
+		list2 = new JList<Script>(model2);
 		JScrollPane jScrollPane12 = new JScrollPane(list2);
 		panel1.add(jScrollPane12);
 		jScrollPane12.setMaximumSize(new Dimension(100, 200));
@@ -106,11 +105,11 @@ public class EditRuleJPanel extends JPanel {
 
 	}
 
-	public JList getChoosenScripts() {
+	public JList<Script> getChoosenScripts() {
 		return list2;
 	}
 
-	public DefaultListModel getNewModel() {
+	public DefaultListModel<Script> getNewModel() {
 		return model2;
 	}
 }

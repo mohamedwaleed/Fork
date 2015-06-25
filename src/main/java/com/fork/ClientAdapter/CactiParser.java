@@ -1,13 +1,16 @@
 package com.fork.ClientAdapter;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import net.stamfest.rrd.CommandResult;
 import net.stamfest.rrd.RRDp;
 
+import org.rrd4j.core.RrdDb;
+
+import com.fork.domain.DataSource;
 import com.fork.domain.InterfaceData;
 
 public class CactiParser implements IDataParser {
@@ -18,7 +21,42 @@ public class CactiParser implements IDataParser {
 	 *            Device rrd file data
 	 * @return List<InterfaceData> output InterfaceData of the rrd file data
 	 */
-	public InterfaceData parse(String rrdFilePath) {
+	public InterfaceData parse(String rrdFilePath, List<String> dataSources) {
+		String osName = System.getProperty("os.name").toLowerCase();
+		if (osName.contains("windows"))
+			return parseWindows(rrdFilePath, dataSources);
+		else
+			return parseLinux(rrdFilePath);
+	}
+
+	public InterfaceData parseWindows(String rrdFilePath,
+			List<String> dataSources) {
+		InterfaceData interfaceData = new InterfaceData();
+		try {
+			File rrdFile = new File(rrdFilePath);
+			String path = RrdDb.PREFIX_RRDTool + rrdFile.getCanonicalPath();
+			RrdDb convert = new RrdDb("RRD4J.jrb", path);
+			convert.close();
+
+			RrdDb parseData = new RrdDb("RRD4J.jrb");
+			int ID = 0;
+			for (String dataSource : dataSources) {
+				DataSource newDataSource = new DataSource();
+				newDataSource.setID(String.valueOf(ID));
+				newDataSource.setDataSourceName(dataSource);
+				double value = parseData.getLastDatasourceValue(dataSource);
+				newDataSource.setDataSourceValue(value);
+				interfaceData.addDataSource(newDataSource);
+				++ID;
+			}
+			parseData.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return interfaceData;
+	}
+
+	public InterfaceData parseLinux(String rrdFilePath) {
 		RRDp command = null;
 		CommandResult commandResult = null;
 		try {
@@ -35,23 +73,27 @@ public class CactiParser implements IDataParser {
 		String data = commandResult.getOutput();
 		InterfaceData interfaceData = new InterfaceData();
 		Scanner in = new Scanner(data);
+		String[] dataSources = in.nextLine().split(" ");
 		in.nextLine();
-		in.nextLine();
+		String line = "";
 		while (in.hasNextLine()) {
-			String line = in.nextLine();
-			String[] twoParts = line.split(": ");
-			long time = Long.parseLong(twoParts[0]);
-			String inB = twoParts[1].split(" ")[0], outB = twoParts[1]
-					.split(" ")[1];
-			if (!inB.equals("-nan") && !outB.equals("-nan")) {
-				double inBound = Double.valueOf(inB);
-				double outBound = Double.valueOf(outB);
-				interfaceData = new InterfaceData(time, inBound, outBound);
-			} else
-				interfaceData = new InterfaceData(time, -1, -1);
+			line = in.nextLine();
+		}
+		String[] twoParts = line.split(": ");
+		String[] dataRow = twoParts[1].split(" ");
+		int ID = 0;
+		for (int i = 0; i < dataRow.length; ++i) {
+			double value = -1.0;
+			if (!dataRow[i].equals("-nan"))
+				value = Double.valueOf(dataRow[i]);
+			DataSource newDataSource = new DataSource();
+			newDataSource.setID(String.valueOf(ID));
+			newDataSource.setDataSourceName(dataSources[i]);
+			newDataSource.setDataSourceValue(value);
+			interfaceData.addDataSource(newDataSource);
+			++ID;
 		}
 		in.close();
 		return interfaceData;
 	}
-
 }

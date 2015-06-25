@@ -2,7 +2,6 @@ package com.fork.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,40 +31,42 @@ import com.fork.domain.Device;
 import com.fork.domain.Interface;
 import com.fork.domain.Script;
 import com.fork.domain.Zone;
-import com.fork.persistance.rdf.JenaRetrieval;
-import com.fork.persistance.sqlite.DatabaseLogic;
+import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.RDFLogic;
 
 @SuppressWarnings("serial")
 public class RuleAddition extends JFrame implements ListSelectionListener,
 		MouseListener {
 	private ZoneArea zoneArea;
-	private InterfacePanel interfacePanel;
-	@SuppressWarnings("rawtypes")
-	private DefaultListModel model;
-	@SuppressWarnings("rawtypes")
-	private JList list;
+	private DefaultListModel<Zone> model;
+	private DefaultListModel<Interface> model2;
+	private List<Interface> interfaces;
+	private JList<Zone> list;
+	private JList<Interface> list2;
 	private List<Zone> zones;
 	private List<JLabel> labels;
 	private JTextArea ruleName;
 	private RulePanel par;
-	private JenaRetrieval jenaRetrieval;
+	private RDFLogic rDFLogic;
 	private List<Device> zoneDevices;
+	private Device selDevice;
+	private JLabel lblSelectedDeviceInterfaces;
+	private List<String> conditions;
 
 	/**
 	 * Create the panel.
 	 */
-	@SuppressWarnings("unchecked")
 	public RuleAddition(RulePanel d) {
-		jenaRetrieval = new JenaRetrieval();
+		rDFLogic = new RDFLogic();
 		this.par = d;
 		labels = new ArrayList<JLabel>();
 		setResizable(false);
-		setBounds(100, 100, 789, 588);
+		setBounds(100, 100, 1040, 335);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setTitle("Rule Addition");
 		setVisible(true);
-
+		conditions = new ArrayList<String>();
 		getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
@@ -85,12 +86,12 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList.setLayout(new BorderLayout(0, 0));
 
-		model = new DefaultListModel();
-		zones = jenaRetrieval.getZones();
+		model = new DefaultListModel<Zone>();
+		zones = rDFLogic.getZones();
 
 		for (int i = 0; i < zones.size(); i++)
 			model.addElement(((Zone) zones.get(i)));
-		list = new JList(model);
+		list = new JList<Zone>(model);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
 		JScrollPane jScrollPane = new JScrollPane(list);
@@ -102,23 +103,21 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		lblListOfZones.setBounds(10, 1, 166, 14);
 		panel.add(lblListOfZones);
 
-		interfacePanel = new InterfacePanel();
-		getContentPane().add(interfacePanel);
-
 		JButton btnNewButton = new JButton("Add Rule");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = ruleName.getText().toString();
-				List<String> conditions = interfacePanel.getConditions();
-				String rule = "";
-				for (int i = 0; i < conditions.size(); i++) {
-					if (i < conditions.size() - 1)
-						rule += (conditions.get(i) + "&");
-					else
-						rule += conditions.get(i);
+				if (conditions.size() > 0) {
+					String name = ruleName.getText().toString();
+					String rule = "";
+					for (int i = 0; i < conditions.size(); i++) {
+						if (i < conditions.size() - 1)
+							rule += (conditions.get(i) + "&");
+						else
+							rule += conditions.get(i);
+					}
+					if (!name.isEmpty() && !conditions.isEmpty())
+						showChooseScriptDialog(name, rule);
 				}
-				if (!name.isEmpty() && !conditions.isEmpty())
-					showChooseScriptDialog(name, rule);
 			}
 		});
 		btnNewButton.setBounds(522, 11, 251, 23);
@@ -132,6 +131,26 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		ruleName.setBounds(198, 13, 190, 15);
 		getContentPane().add(ruleName);
 
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_1.setBounds(783, 39, 241, 257);
+		getContentPane().add(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		model2 = new DefaultListModel<Interface>();
+		list2 = new JList<Interface>(model2);
+		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list2.addListSelectionListener(this);
+		JScrollPane scrollPane = new JScrollPane(list2);
+		scrollPane.setMaximumSize(new Dimension(200, 100));
+		panel_1.add(scrollPane, BorderLayout.CENTER);
+
+		lblSelectedDeviceInterfaces = new JLabel("Selected device interfaces");
+		lblSelectedDeviceInterfaces
+				.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSelectedDeviceInterfaces.setBounds(783, 15, 241, 14);
+		getContentPane().add(lblSelectedDeviceInterfaces);
+
 	}
 
 	protected void showChooseScriptDialog(String name, String query) {
@@ -142,8 +161,8 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 				"Choose scripts", JOptionPane.OK_CANCEL_OPTION);
 
 		if (result == JOptionPane.OK_OPTION) {
-			JList choosenScripts = djp.getChoosenScripts();
-			DefaultListModel scriptsModel = djp.getModel();
+			JList<Script> choosenScripts = djp.getChoosenScripts();
+			DefaultListModel<Script> scriptsModel = djp.getModel();
 			String nameEdited = djp.getNameEdited();
 			if (!nameEdited.isEmpty()) {
 
@@ -167,22 +186,39 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		if (!e.getValueIsAdjusting()) {
-			zoneArea.removeAllComponents();
-			if (list.getSelectedIndex() != -1) {
-				zoneDevices = jenaRetrieval.getZoneDevices((Zone) model
-						.getElementAt(list.getSelectedIndex()));
+		if (e.getSource() == list) {
+			if (!e.getValueIsAdjusting()) {
+				zoneArea.removeAllComponents();
+				if (list.getSelectedIndex() != -1) {
+					zoneDevices = rDFLogic.getZoneDevices((Zone) model
+							.getElementAt(list.getSelectedIndex()));
 
-				System.out.println((Zone) model.getElementAt(list
-						.getSelectedIndex()));
-				for (int i = 0; i < zoneDevices.size(); i++) {
-					JLabel tmp = zoneArea.addImage(zoneDevices.get(i)
-							.getHostName(), zoneDevices.get(i).getIP());
-					labels.add(tmp);
-					tmp.addMouseListener(this);
+					System.out.println((Zone) model.getElementAt(list
+							.getSelectedIndex()));
+					for (int i = 0; i < zoneDevices.size(); i++) {
+						JLabel tmp = zoneArea.addImage(zoneDevices.get(i)
+								.getHostName(), zoneDevices.get(i).getIP());
+						labels.add(tmp);
+						tmp.addMouseListener(this);
+					}
+				}
+			}
+		} else if (e.getSource() == list2) {
+			if (!e.getValueIsAdjusting()) {
+				if (list2.getSelectedIndex() != -1) {
+					DataSourcePanel dataSourcePanel = new DataSourcePanel(model2.getElementAt(list2.getSelectedIndex()),
+							selDevice);
+					UIManager.put("OptionPane.minimumSize", new Dimension(550, 300));
+					int result = JOptionPane.showConfirmDialog(RuleAddition.this, dataSourcePanel,
+							"Data Sources values", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						conditions.add(dataSourcePanel.getConditions());
+					}
+
 				}
 			}
 		}
+
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -192,12 +228,15 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 				System.out.println(label.getText().toString());
 
 				Device device = zoneDevices.get(i);
-				List<Interface> interfaces = device.getInterfaces();
+				interfaces = device.getInterfaces();
 				System.out.println("Test:  " + interfaces.size());
-
-				interfacePanel.addInteefaces(interfaces, device);
+				model2 = new DefaultListModel<Interface>();
+				for (Interface interfac : interfaces)
+					model2.addElement((Interface) interfac);
+				list2.setModel(model2);
+				selDevice = device;
+				lblSelectedDeviceInterfaces.setText(selDevice.getHostName());
 				break;
-
 			}
 		}
 	}
