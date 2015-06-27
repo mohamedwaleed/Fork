@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -48,7 +49,7 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		setLayout(null);
 
 		final JPanel RuleArea = new JPanel();
-		RuleArea.setBounds(165, 45, 462, 240);
+		RuleArea.setBounds(165, 11, 462, 227);
 		RuleArea.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		RuleArea.setBackground(SystemColor.menu);
 		RuleArea.setForeground(Color.BLACK);
@@ -56,22 +57,22 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		RuleArea.setLayout(null);
 
 		JLabel lblNewLabel_2 = new JLabel("Name");
-		lblNewLabel_2.setBounds(10, 60, 68, 14);
+		lblNewLabel_2.setBounds(10, 40, 68, 14);
 		RuleArea.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("Rule");
-		lblNewLabel_3.setBounds(10, 99, 68, 14);
+		lblNewLabel_3.setBounds(10, 79, 68, 14);
 		RuleArea.add(lblNewLabel_3);
 
 		textField_1 = new JTextField();
 		textField_1.setEditable(false);
 		textField_1.setBackground(SystemColor.window);
-		textField_1.setBounds(88, 57, 355, 20);
+		textField_1.setBounds(88, 37, 355, 31);
 		RuleArea.add(textField_1);
 		textField_1.setColumns(10);
 		JScrollPane scS = new JScrollPane();
 		scS.setSize(365, 130);
-		scS.setLocation(88, 99);
+		scS.setLocation(88, 79);
 		scS.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scS.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		RuleArea.add(scS);
@@ -98,11 +99,11 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 				}
 			}
 		});
-		chckbxActivated.setBounds(10, 18, 97, 23);
+		chckbxActivated.setBounds(10, 7, 97, 23);
 		RuleArea.add(chckbxActivated);
 
 		JPanel liftList1 = new JPanel();
-		liftList1.setBounds(10, 70, 145, 215);
+		liftList1.setBounds(10, 36, 145, 203);
 		liftList1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList1.setLayout(new BorderLayout(0, 0));
 		add(liftList1);
@@ -118,10 +119,12 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		liftList1.add(jScrollPane1, BorderLayout.CENTER);
 
 		JPanel panel_s = new JPanel();
-		panel_s.setBounds(10, 285, 618, 33);
+		panel_s.setBounds(10, 249, 618, 65);
 		add(panel_s);
 
-		JButton remove = new JButton("Remove");
+		//JButton remove = new JButton("Remove");
+		JButton remove = new RoundButton(new ImageIcon("remove.png"),
+				"removec.png", "remove.png");
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (list.getSelectedIndex() != -1) {
@@ -135,6 +138,18 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 					}
 					DatabaseLogic.deleteRules(ids);
 				}
+			}
+		});
+
+		// JButton btnNewButton_2 = new JButton("Add Rule");
+		JButton btnNewButton_2 = new RoundButton(new ImageIcon("add.png"),
+				"addc.png", "add.png");
+		panel_s.add(btnNewButton_2);
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ruleAddition = new RuleAddition(RulePanel.this);
+				ruleAddition.initialize();
+
 			}
 		});
 		panel_s.add(remove);
@@ -172,20 +187,9 @@ public class RulePanel extends JPanel implements ListSelectionListener {
 		});
 		panel_s.add(btnNewButton);
 
-		JButton btnNewButton_2 = new JButton("Add Rule");
-		btnNewButton_2.setBounds(0, 0, 627, 33);
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ruleAddition = new RuleAddition(RulePanel.this);
-				ruleAddition.initialize();
-
-			}
-		});
-		add(btnNewButton_2);
-
 		JLabel lblListOfRules = new JLabel("List of rules");
 		lblListOfRules.setHorizontalAlignment(SwingConstants.CENTER);
-		lblListOfRules.setBounds(10, 45, 145, 14);
+		lblListOfRules.setBounds(10, 11, 145, 14);
 		add(lblListOfRules);
 	}
 

@@ -18,6 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import com.fork.Main;
 import com.fork.outputController.DatabaseLogic;
 
 public class MainWindow {
@@ -93,7 +94,7 @@ public class MainWindow {
 	}
 
 	private void getMySQlAuth() {
-		String [] auth = DatabaseLogic.getMysqlAuth();
+		String[] auth = DatabaseLogic.getMysqlAuth();
 		MainWindow.username = auth[0];
 		MainWindow.password = auth[1];
 	}
@@ -118,7 +119,9 @@ public class MainWindow {
 			MainWindow.password = new String(password.getPassword());
 			DatabaseLogic.updateMysqlAuth(MainWindow.username,
 					MainWindow.password);
-			return true;
+			if (Main.tryMysqlConnection(MainWindow.username,
+					MainWindow.password))
+				return true;
 		}
 		return false;
 	}

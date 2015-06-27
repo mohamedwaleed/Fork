@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -39,7 +40,7 @@ public class EditRuleJPanel extends JPanel {
 		add(lblScripts);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 42, 146, 247);
+		panel.setBounds(10, 54, 146, 235);
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		scriptsNames = DatabaseLogic.getScripts();
@@ -62,7 +63,7 @@ public class EditRuleJPanel extends JPanel {
 			model2.addElement(((Script) ruleScriptsNames.get(i)));
 
 		JPanel panel1 = new JPanel();
-		panel1.setBounds(245, 40, 161, 249);
+		panel1.setBounds(245, 54, 161, 235);
 		add(panel1);
 		panel1.setLayout(new BorderLayout(0, 0));
 		list2 = new JList<Script>(model2);
@@ -87,7 +88,8 @@ public class EditRuleJPanel extends JPanel {
 		button.setBounds(166, 138, 69, 23);
 		add(button);
 
-		JButton btnRemove = new JButton("Remove");
+		JButton btnRemove = new RoundButton(new ImageIcon("remove.png"),
+				"removec.png", "remove.png");
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (list2.getSelectedIndex() != -1) {

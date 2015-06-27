@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ public class RuleFire {
 		frame.setTitle("Rule Fired");
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setBounds(100, 100, 452, 263);
+		frame.setBounds(100, 100, 453, 302);
 		frame.getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
@@ -55,7 +56,7 @@ public class RuleFire {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		final JPanel scriptArea = new JPanel();
-		scriptArea.setBounds(10, 55, 298, 179);
+		scriptArea.setBounds(10, 55, 255, 207);
 		scriptArea.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		scriptArea.setBackground(SystemColor.menu);
 		scriptArea.setForeground(Color.BLACK);
@@ -70,7 +71,7 @@ public class RuleFire {
 		scriptTextArea.setText(writeRuleToTextArea(rule));
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(318, 55, 122, 140);
+		panel_3.setBounds(275, 55, 165, 135);
 		panel_3.setLayout(new BorderLayout(0, 0));
 		ruleScripts = DatabaseLogic.getRuleScripts(rule.getID());
 		model2 = new DefaultListModel<Script>();
@@ -82,7 +83,13 @@ public class RuleFire {
 		panel_3.add(jScrollPane2);
 		frame.getContentPane().add(panel_3);
 
-		JButton btnRunScripts = new JButton("Run script(s)");
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(275, 201, 165, 61);
+		frame.getContentPane().add(panel_1);
+		//JButton btnRunScripts = new JButton("Run script(s)");
+		JButton btnRunScripts = new RoundButton(new ImageIcon("run.png"),
+				"runc.png", "run.png");
 		btnRunScripts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (list2.getSelectedIndex() != -1) {
@@ -92,8 +99,9 @@ public class RuleFire {
 				}
 			}
 		});
-		btnRunScripts.setBounds(318, 200, 122, 23);
-		frame.getContentPane().add(btnRunScripts);
+		panel_1.add(btnRunScripts);
+		
+		
 	}
 
 	public static String writeRuleToTextArea(Rule rule) {

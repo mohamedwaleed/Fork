@@ -3,6 +3,7 @@ package com.fork.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -61,7 +63,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		this.par = d;
 		labels = new ArrayList<JLabel>();
 		setResizable(false);
-		setBounds(100, 100, 1040, 335);
+		setBounds(100, 100, 986, 399);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setTitle("Rule Addition");
@@ -70,18 +72,17 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panel.setBounds(10, 39, 763, 257);
+		panel.setBounds(10, 77, 763, 282);
 		getContentPane().add(panel);
 
 		zoneArea = new ZoneArea();
 		zoneArea.initialize();
-		zoneArea.setBounds(186, 0, 576, 257);
+		zoneArea.setBounds(195, 11, 558, 260);
 		panel.setLayout(null);
 		panel.add(zoneArea);
 
 		JPanel liftList = new JPanel();
-		liftList.setBounds(10, 26, 167, 231);
+		liftList.setBounds(10, 40, 167, 231);
 		panel.add(liftList);
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList.setLayout(new BorderLayout(0, 0));
@@ -100,10 +101,47 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 
 		JLabel lblListOfZones = new JLabel("List of zones");
 		lblListOfZones.setHorizontalAlignment(SwingConstants.CENTER);
-		lblListOfZones.setBounds(10, 1, 166, 14);
+		lblListOfZones.setBounds(10, 1, 166, 28);
 		panel.add(lblListOfZones);
 
-		JButton btnNewButton = new JButton("Add Rule");
+		JLabel lblRuleName = new JLabel("Rule Name");
+		lblRuleName.setBounds(284, 15, 76, 25);
+		getContentPane().add(lblRuleName);
+
+		ruleName = new JTextArea();
+		ruleName.setBounds(357, 15, 190, 25);
+		getContentPane().add(ruleName);
+
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_1.setBounds(783, 107, 190, 240);
+		getContentPane().add(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		model2 = new DefaultListModel<Interface>();
+		list2 = new JList<Interface>(model2);
+		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list2.addListSelectionListener(this);
+		JScrollPane scrollPane = new JScrollPane(list2);
+		scrollPane.setMaximumSize(new Dimension(200, 100));
+		panel_1.add(scrollPane, BorderLayout.CENTER);
+
+		lblSelectedDeviceInterfaces = new JLabel("Selected device interfaces");
+		lblSelectedDeviceInterfaces
+				.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSelectedDeviceInterfaces.setBounds(783, 71, 190, 25);
+		getContentPane().add(lblSelectedDeviceInterfaces);
+
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		panel_2.setBounds(583, 11, 190, 63);
+		getContentPane().add(panel_2);
+
+		// JButton btnNewButton = new JButton("Add Rule");
+		JButton btnNewButton = new RoundButton(new ImageIcon("add.png"),
+				"addc.png", "add.png");
+		panel_2.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (conditions.size() > 0) {
@@ -120,43 +158,14 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 				}
 			}
 		});
-		btnNewButton.setBounds(522, 11, 251, 23);
-		getContentPane().add(btnNewButton);
-
-		JLabel lblRuleName = new JLabel("Rule Name");
-		lblRuleName.setBounds(112, 14, 76, 14);
-		getContentPane().add(lblRuleName);
-
-		ruleName = new JTextArea();
-		ruleName.setBounds(198, 13, 190, 15);
-		getContentPane().add(ruleName);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panel_1.setBounds(783, 39, 241, 257);
-		getContentPane().add(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
-
-		model2 = new DefaultListModel<Interface>();
-		list2 = new JList<Interface>(model2);
-		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list2.addListSelectionListener(this);
-		JScrollPane scrollPane = new JScrollPane(list2);
-		scrollPane.setMaximumSize(new Dimension(200, 100));
-		panel_1.add(scrollPane, BorderLayout.CENTER);
-
-		lblSelectedDeviceInterfaces = new JLabel("Selected device interfaces");
-		lblSelectedDeviceInterfaces
-				.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSelectedDeviceInterfaces.setBounds(783, 15, 241, 14);
-		getContentPane().add(lblSelectedDeviceInterfaces);
 
 	}
 
 	protected void showChooseScriptDialog(String name, String query) {
-
+		UIManager.getLookAndFeel().uninitialize();
+		UIManager.getLookAndFeelDefaults().put("OptionPane.minimumSize",
+				new Dimension(600, 380));
 		DialogJPanel djp = new DialogJPanel(name, query);
-		UIManager.put("OptionPane.minimumSize", new Dimension(500, 350));
 		int result = JOptionPane.showConfirmDialog(RuleAddition.this, djp,
 				"Choose scripts", JOptionPane.OK_CANCEL_OPTION);
 
@@ -165,9 +174,7 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 			DefaultListModel<Script> scriptsModel = djp.getModel();
 			String nameEdited = djp.getNameEdited();
 			if (!nameEdited.isEmpty()) {
-
 				int newId = DatabaseLogic.addRule(nameEdited, query);
-
 				int picked[] = choosenScripts.getSelectedIndices();
 				List<Script> pickedScripts = new ArrayList<Script>();
 				for (int i : picked)
@@ -206,11 +213,18 @@ public class RuleAddition extends JFrame implements ListSelectionListener,
 		} else if (e.getSource() == list2) {
 			if (!e.getValueIsAdjusting()) {
 				if (list2.getSelectedIndex() != -1) {
-					DataSourcePanel dataSourcePanel = new DataSourcePanel(model2.getElementAt(list2.getSelectedIndex()),
+					UIManager.getLookAndFeel().uninitialize();
+					UIManager.getLookAndFeelDefaults().put(
+							"OptionPane.minimumSize", new Dimension(550, 320));
+
+					
+					DataSourcePanel dataSourcePanel = new DataSourcePanel(
+							model2.getElementAt(list2.getSelectedIndex()),
 							selDevice);
-					UIManager.put("OptionPane.minimumSize", new Dimension(550, 300));
-					int result = JOptionPane.showConfirmDialog(RuleAddition.this, dataSourcePanel,
-							"Data Sources values", JOptionPane.OK_CANCEL_OPTION);
+					int result = JOptionPane
+							.showConfirmDialog(RuleAddition.this,
+									dataSourcePanel, "Data Sources values",
+									JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 						conditions.add(dataSourcePanel.getConditions());
 					}

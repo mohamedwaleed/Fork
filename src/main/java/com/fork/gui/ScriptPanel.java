@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -34,7 +35,7 @@ public class ScriptPanel extends JPanel {
 	private List<Script> scriptsNames;
 	private DefaultListModel<Script> model;
 	private JScrollPane jScrollPane1;
-	
+
 	/**
 	 * Create the panel.
 	 */
@@ -43,9 +44,8 @@ public class ScriptPanel extends JPanel {
 	public ScriptPanel() {
 		setLayout(null);
 
-
 		JPanel liftList1 = new JPanel();
-		liftList1.setBounds(10, 69, 620, 216);
+		liftList1.setBounds(10, 35, 620, 207);
 		liftList1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		liftList1.setLayout(new BorderLayout(0, 0));
 		add(liftList1);
@@ -60,11 +60,12 @@ public class ScriptPanel extends JPanel {
 		liftList1.add(jScrollPane1, BorderLayout.CENTER);
 
 		JPanel panel_s = new JPanel();
-		panel_s.setBounds(10, 285, 618, 33);
+		panel_s.setBounds(10, 253, 618, 58);
 		add(panel_s);
 
-		
-		JButton remove = new JButton("Remove");
+		//JButton remove = new JButton("Remove");
+		JButton remove = new RoundButton(new ImageIcon("remove.png"),
+				"removec.png", "remove.png");
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int rows[] = list.getSelectedIndices();
@@ -78,10 +79,11 @@ public class ScriptPanel extends JPanel {
 				DatabaseLogic.deleteScripts(ids);
 			}
 		});
-		panel_s.add(remove);
 
-		JButton btnNewButton_2 = new JButton("Add Script");
-		btnNewButton_2.setBounds(0, 0, 627, 33);
+		// JButton btnNewButton_2 = new JButton("Add Script");
+		JButton btnNewButton_2 = new RoundButton(new ImageIcon("add.png"),
+				"addc.png", "add.png");
+		panel_s.add(btnNewButton_2);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ScriptAddition.start();
@@ -92,16 +94,17 @@ public class ScriptPanel extends JPanel {
 				list.setModel(model);
 			}
 		});
-		add(btnNewButton_2);
-		
+		panel_s.add(remove);
+
 		JLabel lblListOfScripts = new JLabel("List of scripts");
 		lblListOfScripts.setHorizontalAlignment(SwingConstants.LEFT);
-		lblListOfScripts.setBounds(10, 45, 145, 14);
+		lblListOfScripts.setBounds(10, 11, 145, 14);
 		add(lblListOfScripts);
 	}
 
-	static class ScriptAddition{
-		static String name ;
+	static class ScriptAddition {
+		static String name;
+
 		public static void start() {
 			final JPanel myPanel = new JPanel();
 			myPanel.setBounds(100, 100, 100, 100);
@@ -109,8 +112,6 @@ public class ScriptPanel extends JPanel {
 			final JTextField path = new JTextField();
 			path.setEditable(false);
 
-			
-			
 			JButton browse = new JButton("Browse ...");
 			browse.setBounds(0, 0, 627, 33);
 			browse.addActionListener(new ActionListener() {
@@ -129,7 +130,7 @@ public class ScriptPanel extends JPanel {
 			});
 			myPanel.add(browse);
 			myPanel.add(path);
-			
+
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Add Script", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {

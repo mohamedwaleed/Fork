@@ -21,7 +21,7 @@ public class ZoneArea extends JPanel {
 	}
 
 	public void initialize() {
-		setBounds(177, 30, 438, 240);
+		setBounds(177, 84, 438, 214);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		setBackground(Color.WHITE);
 		setForeground(Color.BLACK);

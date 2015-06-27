@@ -17,18 +17,19 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		DatabaseConnector.buildDatabase();
-
 		MainWindow window = new MainWindow();
-
-		if (!tryMysqlConnection(MainWindow.username, MainWindow.password))
-			if (!window.showMySqlAuth())
-				System.exit(0);
+		if (!tryMysqlConnection(MainWindow.username, MainWindow.password)) {
+			boolean flag = false;
+			while (!flag) {
+				if (window.showMySqlAuth())
+					flag = true;
+			}
+		}
 		window.frame.setVisible(true);
-
 		initializeCoreThread(window.frame);
 	}
 
-	private static boolean tryMysqlConnection(String userName, String passWord) {
+	public static boolean tryMysqlConnection(String userName, String passWord) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(
@@ -47,7 +48,8 @@ public class Main {
 	}
 
 	private static void initializeCoreThread(JFrame frame) {
-		ForkBackgroundProcess core = new ForkBackgroundProcess("Thread-1", frame);
+		ForkBackgroundProcess core = new ForkBackgroundProcess("Thread-1",
+				frame);
 		core.start();
 	}
 

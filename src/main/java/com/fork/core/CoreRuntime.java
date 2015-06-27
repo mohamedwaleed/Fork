@@ -12,7 +12,6 @@ public class CoreRuntime {
 		RDFLogic rDFLogic = new RDFLogic();
 		for (Rule rule : rules) {
 			if (rDFLogic.fireRule(rule)) {
-				new RuleFire(rule);
 				RuleFire window = new RuleFire(rule);
 				window.frame.setVisible(true);
 			}

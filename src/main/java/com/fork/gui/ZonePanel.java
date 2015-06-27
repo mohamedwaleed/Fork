@@ -3,6 +3,7 @@ package com.fork.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -24,7 +26,6 @@ import javax.swing.border.LineBorder;
 import com.fork.domain.Device;
 import com.fork.domain.Zone;
 import com.fork.outputController.RDFLogic;
-import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")
 public class ZonePanel extends JPanel {
@@ -51,10 +52,9 @@ public class ZonePanel extends JPanel {
 		add(zoneArea);
 
 		JPanel zoneName = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) zoneName.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		zoneName.setBounds(10, 0, 605, 30);
+		zoneName.setBounds(10, 0, 605, 61);
 		add(zoneName);
+		zoneName.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel lblNewLabel = new JLabel("Zone Name");
 		zoneName.add(lblNewLabel);
@@ -64,8 +64,64 @@ public class ZonePanel extends JPanel {
 		zoneName.add(textField);
 		textField.setColumns(20);
 
+		// JButton btnNewButton_1 = new JButton("Save Zone");
+		JButton btnNewButton_1 = new RoundButton(new ImageIcon("add.png"),
+				"addc.png", "add.png");
+		zoneName.add(btnNewButton_1);
+
+		// JButton btnRemoveAZone = new JButton("Remove a Zone");
+		JButton btnRemoveAZone = new RoundButton(new ImageIcon("remove.png"),
+				"removec.png", "remove.png");
+		zoneName.add(btnRemoveAZone);
+		btnRemoveAZone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				ZoneRemoval djp = new ZoneRemoval();
+				UIManager.getLookAndFeel().uninitialize();
+				UIManager.getLookAndFeelDefaults().put(
+						"OptionPane.minimumSize", new Dimension(400, 300));
+				int result = JOptionPane.showConfirmDialog(ZonePanel.this, djp,
+						"Pick zones to delete", JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					JList choosenZones = djp.getChoosenZones();
+					DefaultListModel zonesModel = djp.getModel();
+					int picked[] = choosenZones.getSelectedIndices();
+					for (int i : picked) {
+						rDFLogic.deleteZone((Zone) (zonesModel.getElementAt(i)));
+						rDFLogic.deleteAllZoneRelations((Zone) (zonesModel
+								.getElementAt(i)));
+						updateList();
+					}
+
+				}
+
+			}
+		});
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!textField.getText().toString().isEmpty()) {
+					List<Zone> zones = rDFLogic.getZones();
+					int mx = -1;
+					for (Zone curZone : zones)
+						mx = Math.max(mx, Integer.valueOf(curZone.getZoneID()));
+					Zone zone = new Zone();
+					zone.setName(textField.getText().toString());
+					zone.setZoneID(String.valueOf(mx + 1));
+					rDFLogic.addZone(zone);
+					for (Device device : choosenDevices)
+						rDFLogic.addZoneDeviceRelation(zone, device);
+					zoneArea.removeAllComponents();
+					JOptionPane.showMessageDialog(ZonePanel.this, "Zone "
+							+ textField.getText().toString()
+							+ " has been created", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+
+			}
+		});
+
 		JPanel liftList = new JPanel();
-		liftList.setBounds(10, 56, 157, 214);
+		liftList.setBounds(10, 84, 157, 214);
 		liftList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		add(liftList);
 		liftList.setLayout(new BorderLayout(0, 0));
@@ -98,65 +154,9 @@ public class ZonePanel extends JPanel {
 		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		liftList.add(btnNewButton, BorderLayout.EAST);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(10, 281, 605, 33);
-		add(panel_2);
-
-		JButton btnNewButton_1 = new JButton("Save Zone");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!textField.getText().toString().isEmpty()) {
-					List<Zone> zones = rDFLogic.getZones();
-					int mx = -1;
-					for (Zone curZone : zones)
-						mx = Math.max(mx, Integer.valueOf(curZone.getZoneID()));
-					Zone zone = new Zone();
-					zone.setName(textField.getText().toString());
-					zone.setZoneID(String.valueOf(mx + 1));
-					rDFLogic.addZone(zone);
-					for (Device device : choosenDevices)
-						rDFLogic.addZoneDeviceRelation(zone, device);
-					zoneArea.removeAllComponents();
-					JOptionPane.showMessageDialog(ZonePanel.this,
-							"Zone "+textField.getText().toString()+" has been created", "Success",
-							JOptionPane.INFORMATION_MESSAGE);
-				}
-
-			}
-		});
-		panel_2.add(btnNewButton_1);
-
-		JButton btnRemoveAZone = new JButton("Remove a Zone");
-		btnRemoveAZone.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				ZoneRemoval djp = new ZoneRemoval();
-				UIManager
-						.put("OptionPane.minimumSize", new Dimension(400, 300));
-				int result = JOptionPane.showConfirmDialog(ZonePanel.this, djp,
-						"Pick zones to delete", JOptionPane.OK_CANCEL_OPTION);
-
-				if (result == JOptionPane.OK_OPTION) {
-					JList choosenZones = djp.getChoosenZones();
-					DefaultListModel zonesModel = djp.getModel();
-					int picked[] = choosenZones.getSelectedIndices();
-					for (int i : picked) {
-						rDFLogic.deleteZone((Zone) (zonesModel
-								.getElementAt(i)));
-						rDFLogic.deleteAllZoneRelations((Zone) (zonesModel
-								.getElementAt(i)));
-						updateList();
-					}
-
-				}
-
-			}
-		});
-		panel_2.add(btnRemoveAZone);
-
 		JLabel lblListOfNonzoned = new JLabel("List of non-zoned devices");
 		lblListOfNonzoned.setHorizontalAlignment(SwingConstants.CENTER);
-		lblListOfNonzoned.setBounds(10, 35, 157, 20);
+		lblListOfNonzoned.setBounds(10, 64, 157, 20);
 		add(lblListOfNonzoned);
 
 	}

@@ -1,12 +1,15 @@
 package com.fork.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -15,11 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import com.fork.domain.DataSource;
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
-import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class DataSourcePanel extends JPanel {
@@ -64,24 +67,40 @@ public class DataSourcePanel extends JPanel {
 		panel_1.setLayout(null);
 
 		JLabel lblMinimum = new JLabel("Minimum");
-		lblMinimum.setBounds(23, 35, 62, 23);
+		lblMinimum.setBounds(23, 11, 75, 32);
 		panel_1.add(lblMinimum);
 
 		JLabel lblMaximum = new JLabel("Maximum");
-		lblMaximum.setBounds(23, 69, 62, 23);
+		lblMaximum.setBounds(23, 54, 75, 32);
 		panel_1.add(lblMaximum);
 
 		min = new JTextArea();
-		min.setBounds(95, 40, 75, 15);
+		min.setBounds(108, 11, 98, 32);
 		panel_1.add(min);
 
 		max = new JTextArea();
-		max.setBounds(95, 74, 75, 15);
+		max.setBounds(107, 54, 99, 32);
 		panel_1.add(max);
 
-		JButton btnNewButton = new JButton("Add condition");
+		JLabel lblNoteAnyTraffic = new JLabel(
+				"Note: Any traffic data is entered in Bits");
+		lblNoteAnyTraffic.setForeground(Color.RED);
+		lblNoteAnyTraffic.setBounds(10, 182, 261, 14);
+		panel_1.add(lblNoteAnyTraffic);
+
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		panel_2.setBounds(43, 97, 163, 68);
+		panel_1.add(panel_2);
+
+		// JButton btnNewButton = new JButton("Add condition");
+		JButton btnNewButton = new RoundButton(new ImageIcon("add.png"),
+				"addc.png", "add.png");
+		panel_2.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("asds");
 				if (!min.getText().toString().isEmpty()
 						&& !max.getText().toString().isEmpty()
 						&& list.getSelectedIndex() != -1) {
@@ -91,13 +110,6 @@ public class DataSourcePanel extends JPanel {
 				}
 			}
 		});
-		btnNewButton.setBounds(55, 161, 115, 35);
-		panel_1.add(btnNewButton);
-
-		JLabel lblNoteAnyTraffic = new JLabel("Note: Any traffic data is entered in Bits");
-		lblNoteAnyTraffic.setForeground(Color.RED);
-		lblNoteAnyTraffic.setBounds(10, 138, 261, 14);
-		panel_1.add(lblNoteAnyTraffic);
 
 		JLabel lblListOfInterfaces = new JLabel("List of data sources");
 		lblListOfInterfaces.setHorizontalAlignment(SwingConstants.CENTER);
@@ -114,7 +126,10 @@ public class DataSourcePanel extends JPanel {
 		if (condition.isEmpty())
 			condition = device.getHostName() + "#" + interfaceS;
 		condition += ("#" + ds.getDataSourceName() + "#" + inMn + "#" + inMx);
-
+		UIManager.getLookAndFeel().uninitialize();
+		
+		UIManager.getLookAndFeelDefaults().put("OptionPane.minimumSize",
+				new Dimension(262, 90));
 		JOptionPane.showMessageDialog(DataSourcePanel.this,
 				"Condition has been added", "Success",
 				JOptionPane.INFORMATION_MESSAGE);
