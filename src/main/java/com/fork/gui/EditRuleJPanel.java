@@ -40,7 +40,7 @@ public class EditRuleJPanel extends JPanel {
 		add(lblScripts);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 54, 146, 235);
+		panel.setBounds(10, 77, 146, 212);
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		scriptsNames = DatabaseLogic.getScripts();
@@ -63,7 +63,7 @@ public class EditRuleJPanel extends JPanel {
 			model2.addElement(((Script) ruleScriptsNames.get(i)));
 
 		JPanel panel1 = new JPanel();
-		panel1.setBounds(245, 54, 161, 235);
+		panel1.setBounds(245, 77, 161, 212);
 		add(panel1);
 		panel1.setLayout(new BorderLayout(0, 0));
 		list2 = new JList<Script>(model2);
@@ -87,23 +87,26 @@ public class EditRuleJPanel extends JPanel {
 		});
 		button.setBounds(166, 138, 69, 23);
 		add(button);
-
-		JButton btnRemove = new RoundButton(new ImageIcon("remove.png"),
-				"removec.png", "remove.png");
-		btnRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (list2.getSelectedIndex() != -1) {
-					int rows[] = list2.getSelectedIndices();
-					Arrays.sort(rows);
-					for (int i = rows.length - 1; i >= 0; i--) {
-						Script script = (Script) model2.getElementAt(rows[i]);
-						model2.removeElement(script);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(311, 11, 95, 55);
+		add(panel_1);
+		
+				JButton btnRemove = new RoundButton(new ImageIcon("remove.png"),
+						"removec.png", "remove.png");
+				panel_1.add(btnRemove);
+				btnRemove.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if (list2.getSelectedIndex() != -1) {
+							int rows[] = list2.getSelectedIndices();
+							Arrays.sort(rows);
+							for (int i = rows.length - 1; i >= 0; i--) {
+								Script script = (Script) model2.getElementAt(rows[i]);
+								model2.removeElement(script);
+							}
+						}
 					}
-				}
-			}
-		});
-		btnRemove.setBounds(324, 10, 82, 23);
-		add(btnRemove);
+				});
 
 	}
 
