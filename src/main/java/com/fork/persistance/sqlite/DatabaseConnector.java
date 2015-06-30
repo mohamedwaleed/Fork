@@ -28,6 +28,7 @@ public class DatabaseConnector {
 			if (con != null) {
 				Statement stmt = null;
 				try {
+					//build database
 					stmt = con.createStatement();
 					String scriptTable = "CREATE TABLE Script "
 							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
