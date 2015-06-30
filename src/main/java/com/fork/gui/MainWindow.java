@@ -18,12 +18,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import com.fork.Main;
 import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.GUILogic;
 
 public class MainWindow {
-	public static String username = "cactiuser";
-	public static String password = "cactipw";
+	public static String username = "";
+	public static String password = "";
 	public JFrame frame;
 
 	/**
@@ -99,7 +99,7 @@ public class MainWindow {
 		MainWindow.password = auth[1];
 	}
 
-	public boolean showMySqlAuth() {
+	public int showMySqlAuth() {
 		JTextField username = new JTextField();
 		username.requestFocusInWindow();
 		JPasswordField password = new JPasswordField();
@@ -119,16 +119,18 @@ public class MainWindow {
 			MainWindow.password = new String(password.getPassword());
 			DatabaseLogic.updateMysqlAuth(MainWindow.username,
 					MainWindow.password);
-			if (Main.tryMysqlConnection(MainWindow.username,
+			if (GUILogic.tryMysqlConnection(MainWindow.username,
 					MainWindow.password))
-				return true;
+				return 0;
+			else
+				return 1;
 		}
-		return false;
+		return 2;
 	}
 
-	public static void showWrongMysqlAuth() {
+	public static void showWrongAuth() {
 		JOptionPane.showMessageDialog(null,
-				"Invalid MySql Authentication\n Please edit the credintials.",
+				"Fueski or Apache not running \n Please run Fueski server and Apache.",
 				"Warning", JOptionPane.WARNING_MESSAGE);
 	}
 }

@@ -6,16 +6,17 @@ import com.fork.ClientAdapter.CactiDataPoller;
 import com.fork.ClientAdapter.CactiDevicePoller;
 import com.fork.domain.Device;
 import com.fork.domain.Interface;
-import com.fork.gui.MainWindow;
+import com.fork.outputController.GUILogic;
 import com.fork.outputController.RDFLogic;
 
 public class ForkLifecycle implements IForkLifecycle {
 
 	public List<Device> updateDevicesData() {
-		CactiDevicePoller cactiDevicePoller = new CactiDevicePoller(
-				MainWindow.username, MainWindow.password);
-		CactiDataPoller cactiDataPoller = new CactiDataPoller(
-				MainWindow.username, MainWindow.password);
+		String username = GUILogic.getUsername();
+		String pass = GUILogic.getPassowrd();
+		CactiDevicePoller cactiDevicePoller = new CactiDevicePoller(username,
+				pass);
+		CactiDataPoller cactiDataPoller = new CactiDataPoller(username, pass);
 
 		List<Device> newDevices = cactiDevicePoller.pollDevice();
 		if (newDevices != null) {

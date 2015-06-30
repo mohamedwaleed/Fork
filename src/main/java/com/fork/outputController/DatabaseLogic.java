@@ -13,6 +13,10 @@ import com.fork.persistance.sqlite.DatabaseConnector;
 
 public class DatabaseLogic {
 
+	public static void buildSQLite(){
+		DatabaseConnector.buildDatabase();
+	}
+	
 	public static void addScript(String name) {
 		Connection con = DatabaseConnector.getDatabaseConnection();
 		Statement stmt = null;

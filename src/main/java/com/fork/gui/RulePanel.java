@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import com.fork.domain.Rule;
 import com.fork.domain.Script;
 import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.RuleFire;
 
 @SuppressWarnings("serial")
 public class RulePanel extends JPanel implements ListSelectionListener {

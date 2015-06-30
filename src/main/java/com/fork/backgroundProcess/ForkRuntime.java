@@ -13,9 +13,8 @@ import javax.swing.SwingWorker;
 import com.fork.core.CoreRuntime;
 import com.fork.domain.Device;
 import com.fork.domain.Rule;
-import com.fork.gui.MainWindow;
-import com.fork.gui.ZonePanel;
 import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.GUILogic;
 
 public class ForkRuntime extends TimerTask {
 	private JFrame frame;
@@ -53,12 +52,11 @@ public class ForkRuntime extends TimerTask {
 			protected void done() {
 				dlgProgress.dispose();// close the modal dialog
 				if (tmp != null) {
-					ZonePanel.updateList();
-
+					GUILogic.updateZonePanelList();
 					List<Rule> rules = DatabaseLogic.getActiveRules();
 					CoreRuntime.testRules(rules);
 				} else {
-					MainWindow.showWrongMysqlAuth();
+					GUILogic.showWrongAuth();
 				}
 			}
 		};

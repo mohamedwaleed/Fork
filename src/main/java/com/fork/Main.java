@@ -1,14 +1,10 @@
 package com.fork;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import javax.swing.JFrame;
 
 import com.fork.backgroundProcess.ForkBackgroundProcess;
-import com.fork.gui.MainWindow;
-import com.fork.persistance.sqlite.DatabaseConnector;
+import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.GUILogic;
 
 public class Main {
 
@@ -16,35 +12,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DatabaseConnector.buildDatabase();
-		MainWindow window = new MainWindow();
-		if (!tryMysqlConnection(MainWindow.username, MainWindow.password)) {
-			boolean flag = false;
-			while (!flag) {
-				if (window.showMySqlAuth())
-					flag = true;
-			}
-		}
-		window.frame.setVisible(true);
-		initializeCoreThread(window.frame);
-	}
-
-	public static boolean tryMysqlConnection(String userName, String passWord) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/cacti", userName, passWord);
-			con.close();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		DatabaseLogic.buildSQLite();
+		JFrame frame = GUILogic.launchGUI();
+		initializeCoreThread(frame);
 	}
 
 	private static void initializeCoreThread(JFrame frame) {
