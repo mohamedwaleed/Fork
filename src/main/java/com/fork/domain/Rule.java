@@ -53,8 +53,10 @@ public class Rule extends Object {
 		setDataSourceName(new ArrayList<List<String>>());
 		minValue = new ArrayList<List<String>>();
 		maxValue = new ArrayList<List<String>>();
+		//split rule when find and 
 		String[] condations = this.rule.split("&");
 		for (int i = 0; i < condations.length; ++i) {
+			//split between components 
 			String[] parts = condations[i].split("#");
 			devicesName.add(parts[0]);
 			interfacesName.add(parts[1]);

@@ -16,9 +16,9 @@ import com.fork.core.Reasoner;
 import com.fork.core.RuleSequence;
 import com.fork.domain.Device;
 import com.fork.domain.Rule;
-import com.fork.gui.MainWindow;
-import com.fork.gui.ZonePanel;
 import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.GUILogic;
+import com.fork.outputController.RuleFire;
 
 public class ForkRuntime extends TimerTask {
 	private JFrame frame;
@@ -57,31 +57,45 @@ public class ForkRuntime extends TimerTask {
 			protected void done() {
 				dlgProgress.dispose();// close the modal dialog
 				if (tmp != null) {
-					ZonePanel.updateList();
+					GUILogic.updateZonePanelList();
 					List<Rule> rules = DatabaseLogic.getActiveRules();
 					List<Rule> firedRules = CoreRuntime.testRules(rules);
 
-                    Reasoner reasoner = new Reasoner();
 
+                    Reasoner reasoner = new Reasoner();
+                    reasonningInterval--;
+
+                    List<Rule> recommededRules = null;
+                    boolean fired = false;
+                    boolean reInitialize = false;
                     for (int i = 0 ; i < firedRules.size(); i ++){
+                        recommededRules = null;
                         if(!ruleSequence.find(firedRules.get(i))) {
                             ruleSequence.add(firedRules.get(i));
-                        }
-                        reasonningInterval--;
+                            fired = true;
+						}
                         if(reasonningInterval == 0) {
                             // each 15 minutes as we poll every 5 minutes so 15 / 5 = 3 reasonningInterval
-                            List<Rule> recommededRules = reasoner.performReasoning(firedRules.get(i));
-                            System.out.println("Recommened rules for rule " + firedRules.get(i).getID() + " : ");
-                            for (int j = 0; j < recommededRules.size(); j++) {
-                                System.out.println("Rule " + recommededRules.get(j).getID());
-                            }
-                            reasonningInterval = 3;
+                            recommededRules = reasoner.performReasoning(firedRules.get(i));
+                            reInitialize = true;
                         }
+                        if(recommededRules!=null && recommededRules.size() == 0)
+                            recommededRules = null;
+
+                        RuleFire window = new RuleFire(firedRules.get(i),recommededRules);
+                        window.frame.setVisible(true);
                     }
-                    reasoner.addToHistory(ruleSequence);
+
+                    if(reInitialize){
+                        reasoner.addToHistory(ruleSequence);
+                        reasonningInterval = 3;
+                        ruleSequence.clear();
+                    }
+
+
 
 				} else {
-					MainWindow.showWrongMysqlAuth();
+					GUILogic.showWrongAuth();
 				}
 			}
 		};

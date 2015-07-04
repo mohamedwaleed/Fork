@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import com.fork.domain.Rule;
 import com.fork.domain.Script;
 import com.fork.outputController.DatabaseLogic;
+import com.fork.outputController.RuleFire;
 
 @SuppressWarnings("serial")
 public class DialogJPanel extends JPanel {

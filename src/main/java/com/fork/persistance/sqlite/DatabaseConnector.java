@@ -23,11 +23,12 @@ public class DatabaseConnector {
 
 	public static void buildDatabase() {
 		File file = new File("ForkDatabase.db");
-		if (!file.exists()) {
+		//if (!file.exists()) {
 			Connection con = getDatabaseConnection();
 			if (con != null) {
 				Statement stmt = null;
 				try {
+					//build database
 					stmt = con.createStatement();
 					String scriptTable = "CREATE TABLE Script "
 							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
@@ -68,7 +69,7 @@ public class DatabaseConnector {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+		//	}
 		}
 	}
 

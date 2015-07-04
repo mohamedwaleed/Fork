@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 public class ForkBackgroundProcess extends Thread {
 	private Thread t;
 	private String threadName;
-	private final int INTERVAL = 60000;
+	private final int INTERVAL = 120000;
 	private JFrame frame;
 
 	public ForkBackgroundProcess(String name, JFrame frame) {
