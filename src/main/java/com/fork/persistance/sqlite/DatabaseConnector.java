@@ -56,6 +56,12 @@ public class DatabaseConnector {
 					String q = "INSERT into Auth (USERNAME, PASSWORD) values ('d','d')";
 					stmt.executeUpdate(q);
 
+					String ruleSequenceTable = "CREATE TABLE RuleSequence "
+							+ "(ID INTEGER PRIMARY KEY     AUTOINCREMENT,"
+							+ " SEQUENCE         TEXT      NOT NULL)";
+
+					stmt.executeUpdate(ruleSequenceTable);
+
 					stmt.close();
 					con.close();
 				} catch (SQLException e) {

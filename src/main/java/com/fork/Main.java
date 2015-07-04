@@ -18,7 +18,7 @@ public class Main {
 	public static void main(String[] args) {
 		DatabaseConnector.buildDatabase();
 		MainWindow window = new MainWindow();
-		if (!tryMysqlConnection(MainWindow.username, MainWindow.password)) {
+		if (!tryMysqlConnection("cacti", "12345")) {
 			boolean flag = false;
 			while (!flag) {
 				if (window.showMySqlAuth())
